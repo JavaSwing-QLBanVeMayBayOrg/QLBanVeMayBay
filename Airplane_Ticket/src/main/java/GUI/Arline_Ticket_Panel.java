@@ -408,7 +408,6 @@ public class Arline_Ticket_Panel extends javax.swing.JPanel {
         if (row>=0)
         {
            vevechon=timVeVeDaChon(Integer.parseInt(jTable2.getValueAt(row, 0).toString()));
-           JOptionPane.showMessageDialog(frame, vevechon.getId());
             ThongTinVeMayBay_Dialog thongtin = new ThongTinVeMayBay_Dialog(frame,true,vevechon);
             thongtin.setLocationRelativeTo(null);
             thongtin.setVisible(true);
