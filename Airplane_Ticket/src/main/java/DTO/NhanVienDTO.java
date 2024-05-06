@@ -1,20 +1,20 @@
 package DTO;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
 
 public class NhanVienDTO {
     private String cmnd;
     private String soDienThoai;
     private String ho;
     private String ten;
-    private LocalDateTime ngaySinh;
+    private Date ngaySinh;
     private boolean GioiTinh;
     private boolean TinhTrang;
 
     public NhanVienDTO() {
     }
 
-    public NhanVienDTO(String cmnd, String soDienThoai, String ho, String ten, LocalDateTime ngaySinh, boolean gioiTinh, boolean tinhTrang) {
+    public NhanVienDTO(String cmnd, String soDienThoai, String ho, String ten, Date ngaySinh, boolean gioiTinh, boolean tinhTrang) {
         this.cmnd = cmnd;
         this.soDienThoai = soDienThoai;
         this.ho = ho;
@@ -56,11 +56,11 @@ public class NhanVienDTO {
         this.ten = ten;
     }
 
-    public LocalDateTime getNgaySinh() {
+    public Date getNgaySinh() {
         return ngaySinh;
     }
 
-    public void setNgaySinh(LocalDateTime ngaySinh) {
+    public void setNgaySinh(Date ngaySinh) {
         this.ngaySinh = ngaySinh;
     }
 
@@ -79,4 +79,5 @@ public class NhanVienDTO {
     public void setTinhTrang(boolean tinhTrang) {
         TinhTrang = tinhTrang;
     }
+
 }

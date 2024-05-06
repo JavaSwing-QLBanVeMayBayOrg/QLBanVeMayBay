@@ -26,22 +26,13 @@ public class HoaDonDAO {
         List<TongHopChuyenBayDTO> tongHopChuyenBayList = new ArrayList<>();
         try {
             // Tạo câu truy vấn SQL để lấy thông tin tổng hợp chuyến bay
-            String sql = "SELECT cb.id AS 'ID Máy Bay', " +
-                "sbDi.ten AS 'Nơi Bắt Đầu', " +
-                "sbDen.ten AS 'Nơi Đáp', " +
-                "COUNT(vmb.id) AS 'Số Vé Bán Ra' " +
-                "FROM chuyenbay cb " +
-                "INNER JOIN sanbay sbDi ON cb.maSanBayDi = sbDi.maSanBay " +
-                "INNER JOIN sanbay sbDen ON cb.maSanBayDen = sbDen.maSanBay " +
-                "LEFT JOIN vemaybay vmb ON cb.id = vmb.id " +
-                "GROUP BY cb.id, sbDi.ten, sbDen.ten";
+            String sql = "SELECT cb.id AS 'ID_MayBay',sbDi.ten AS 'Noi_Bat_Dau',sbDen.ten AS 'Noi_Dap', COUNT(vmb.id) AS 'So_Ve_Ban_Ra' FROM chuyenbay cb INNER JOIN sanbay sbDi ON cb.maSanBayDi = sbDi.maSanBay INNER JOIN sanbay sbDen ON cb.maSanBayDen = sbDen.maSanBay LEFT JOIN vemaybay vmb ON cb.id = vmb.id GROUP BY cb.id, sbDi.ten, sbDen.ten";
 
             // Lấy kết nối tới cơ sở dữ liệu
             Connection connection = BaseDAO.getConnection();
 
             // Tạo PreparedStatement với câu lệnh SQL select
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, username);
 
             // Thực thi câu lệnh select
             ResultSet resultSet = preparedStatement.executeQuery();
