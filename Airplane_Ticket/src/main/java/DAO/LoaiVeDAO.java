@@ -23,7 +23,7 @@ import java.util.Vector;
  * @author ADMIN
  */
 public class LoaiVeDAO {
-     public Vector<LoaiVeMayBayDTO> DanhSachVeChieuDi(ChuyenBayDTO chuyenbaydi) throws SQLException
+     public Vector<LoaiVeMayBayDTO> DanhSachVeChieuDi(ChuyenBayDTO chuyenbaydi,int soLuong) throws SQLException
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String ngaydi= chuyenbaydi.getNgayDi().format(formatter);
@@ -34,7 +34,7 @@ public class LoaiVeDAO {
         if (con!=null) {
         try {
 
-        String sql = "SELECT * FROM loaivemaybay,chuyenbay where chuyenbay.id = loaivemaybay.idChuyenBay and chuyenbay.maSanBayDi='"+ chuyenbaydi.getMaSanBayDi().getMaSanBay()+"' and chuyenbay.maSanBayDen='"+chuyenbaydi.getMaSanBayDen().getMaSanBay()+"' and chuyenbay.ngayDi BETWEEN '"+ngaydi+"' AND '"+ngayve+"' and loaivemaybay.tinhTrang = 1";
+        String sql = "SELECT * FROM loaivemaybay,chuyenbay where chuyenbay.id = loaivemaybay.idChuyenBay and chuyenbay.maSanBayDi='"+ chuyenbaydi.getMaSanBayDi().getMaSanBay()+"' and chuyenbay.maSanBayDen='"+chuyenbaydi.getMaSanBayDen().getMaSanBay()+"' and chuyenbay.ngayDi BETWEEN '"+ngaydi+"' AND '"+ngayve+"' and loaivemaybay.tinhTrang = 1 and loaivemaybay.soLuongVeCon>="+soLuong;
         System.out.println(sql);
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
@@ -68,7 +68,7 @@ public class LoaiVeDAO {
         } }
         return arr;
         }
-     public Vector<LoaiVeMayBayDTO> DanhSachVeChieuVe(ChuyenBayDTO chuyenbayve) throws SQLException
+     public Vector<LoaiVeMayBayDTO> DanhSachVeChieuVe(ChuyenBayDTO chuyenbayve,int soLuong) throws SQLException
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String ngaydi= chuyenbayve.getNgayDi().format(formatter);
@@ -79,7 +79,7 @@ public class LoaiVeDAO {
         if (con!=null) {
         try {
 
-        String sql = "SELECT * FROM loaivemaybay,chuyenbay where chuyenbay.id = loaivemaybay.idChuyenBay and chuyenbay.maSanBayDi='"+ chuyenbayve.getMaSanBayDi().getMaSanBay()+"' and chuyenbay.maSanBayDen='"+chuyenbayve.getMaSanBayDen().getMaSanBay()+"' and chuyenbay.ngayDi BETWEEN '"+ngaydi+"' AND '"+ngayve+"' and loaivemaybay.tinhTrang = 1";
+        String sql = "SELECT * FROM loaivemaybay,chuyenbay where chuyenbay.id = loaivemaybay.idChuyenBay and chuyenbay.maSanBayDi='"+ chuyenbayve.getMaSanBayDi().getMaSanBay()+"' and chuyenbay.maSanBayDen='"+chuyenbayve.getMaSanBayDen().getMaSanBay()+"' and chuyenbay.ngayDi BETWEEN '"+ngaydi+"' AND '"+ngayve+"' and loaivemaybay.tinhTrang = 1 and loaivemaybay.soLuongVeCon>="+soLuong;
         System.out.println(sql);
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
@@ -113,4 +113,25 @@ public class LoaiVeDAO {
         } }
         return arr;
         }
+     public void UpdateSoLuongVe(LoaiVeMayBayDTO loaive,int soLuongCon) throws SQLException
+    {
+       
+        Connection con=BaseDAO.getConnection();
+        if (con!=null) {
+        try {
+
+        String sql = "update loaivemaybay set soLuongVeCon="+soLuongCon+" where id="+loaive.getId();
+        System.out.println(sql);
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate(sql);
+       
+        }
+         catch (SQLException ex) {
+        System.out.println(ex);
+        } finally {
+        BaseDAO.closeConnection();
+        } 
+        }
+    }
+        
 }

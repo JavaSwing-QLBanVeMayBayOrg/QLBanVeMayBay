@@ -26,14 +26,14 @@ import javax.swing.table.DefaultTableModel;
  * @author ADMIN
  */
 public class TimChuyenBay_panel extends javax.swing.JPanel {
-    SanBayBLL sanbayBLL = new SanBayBLL();
-    ChuyenBayDTO chuyenbaydi;
-    ChuyenBayDTO chuyenbayve;
-    SanBayDTO sanbaydi ;
-    SanBayDTO sanbayve;
-    LocalDateTime ngaydi;
-    LocalDateTime ngayve;
-    int soLuong;
+    private SanBayBLL sanbayBLL = new SanBayBLL();
+    private ChuyenBayDTO chuyenbaydi;
+    private ChuyenBayDTO chuyenbayve;
+    private SanBayDTO sanbaydi ;
+    private SanBayDTO sanbayve;
+    private LocalDateTime ngaydi;
+    private LocalDateTime ngayve;
+    private int soLuong;
     HomePage frame;
     
     
