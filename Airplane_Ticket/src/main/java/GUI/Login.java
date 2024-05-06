@@ -158,6 +158,7 @@ public class Login extends javax.swing.JFrame {
             {
                 JOptionPane.showMessageDialog(rootPane,"Đăng nhập thành công !");
                 HomePage hp=new HomePage(taikhoan);
+                hp.setSize(1200,800);
                 hp.setLocationRelativeTo(null);
                 hp.setVisible(true);
                 this.dispose();
