@@ -7,6 +7,7 @@ package GUI;
 import BLL.HangThanThietBLL;
 import BLL.HoaDonVeBanBLL;
 import BLL.KhachHangBLL;
+import BLL.LoaiVeBLL;
 import BLL.VeMayBayBLL;
 import DTO.HangThanThietDTO;
 import DTO.HoaDonVeBanDTO;
@@ -15,6 +16,7 @@ import DTO.LoaiVeMayBayDTO;
 import DTO.NhanVienDTO;
 import DTO.VeMayBayDTO;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +24,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -31,15 +35,16 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Ticket_Book_panel extends javax.swing.JPanel {
     HomePage frame;
-    KhachHangDTO khachhang;
-    LoaiVeMayBayDTO vedi;
-    LoaiVeMayBayDTO veve;
+    private KhachHangDTO khachhang;
+    private LoaiVeMayBayDTO vedi;
+    private LoaiVeMayBayDTO veve;
     int soLuong;
-    HangThanThietBLL hangthanthiet= new HangThanThietBLL();
-    KhachHangBLL khachangBLL=new KhachHangBLL();
-    HoaDonVeBanBLL hoadonbll=new HoaDonVeBanBLL();
-    VeMayBayBLL vemaybayBLL=new VeMayBayBLL();
-    BigDecimal tongtienve;
+    private HangThanThietBLL hangthanthiet= new HangThanThietBLL();
+    private LoaiVeBLL loaiveBLL=new LoaiVeBLL();
+    private KhachHangBLL khachangBLL=new KhachHangBLL();
+    private HoaDonVeBanBLL hoadonbll=new HoaDonVeBanBLL();
+    private VeMayBayBLL vemaybayBLL=new VeMayBayBLL();
+    private BigDecimal tongtienve;
     /**
      * Creates new form Ticket_Book_panel
      */
@@ -49,7 +54,7 @@ public class Ticket_Book_panel extends javax.swing.JPanel {
         DefaultTableModel model= (DefaultTableModel) jTable1.getModel();
         vedi=frame.getPanelVeDaChon().getVedichon();
         veve=frame.getPanelVeDaChon().getVevechon();
-        soLuong=frame.timchuyenbay.getSoLuong();
+        soLuong=frame.getTimchuyenbay().getSoLuong();
         tongtienve =vedi.getGiaVe().multiply(BigDecimal.valueOf(soLuong));
         model.setRowCount(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -185,25 +190,25 @@ public class Ticket_Book_panel extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(6, 6, 6))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 833, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton4)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(jLabel5)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 806, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 3, Short.MAX_VALUE))))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(326, 326, 326)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -213,10 +218,11 @@ public class Ticket_Book_panel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,10 +243,11 @@ public class Ticket_Book_panel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,7 +270,7 @@ public class Ticket_Book_panel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -313,7 +320,8 @@ public class Ticket_Book_panel extends javax.swing.JPanel {
                     khachhang.getIdHangThanThiet().setId(a.getId());
                 }
             }
-            if (checkKhachhang==0)
+            
+            if (khachhang.getDiemTichLuy()==0)
             khachangBLL.create(khachhang);
             else 
                 khachangBLL.updateDiem(khachhang.getCmnd(),khachhang.getDiemTichLuy(),khachhang.getIdHangThanThiet().getId());
@@ -324,6 +332,20 @@ public class Ticket_Book_panel extends javax.swing.JPanel {
                 hoadon.setIdKhachHangLapHoaDon(khachhang);
                 hoadon.setTongTien(tongtienve);
                 hoadon.setTinhTrang(true);
+                
+            try {
+                loaiveBLL.UpdateSoLuongVe(vedi, vedi.getSoLuongVeCon()-soLuong);
+            } catch (SQLException ex) {
+                Logger.getLogger(Ticket_Book_panel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (veve!=null)
+            {
+                try {
+                loaiveBLL.UpdateSoLuongVe(veve, veve.getSoLuongVeCon()-soLuong);
+            } catch (SQLException ex) {
+                Logger.getLogger(Ticket_Book_panel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }
                 
                 LocalDateTime now=LocalDateTime.now();
                 hoadon.setNgayLapHoaDon(now);

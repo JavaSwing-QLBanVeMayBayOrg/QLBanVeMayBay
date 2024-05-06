@@ -21,11 +21,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Arline_Ticket_Panel extends javax.swing.JPanel {
     HomePage frame;
-    LoaiVeMayBayDTO vedichon;
-    LoaiVeMayBayDTO vevechon;
-    LoaiVeBLL loaiveBLL = new LoaiVeBLL();
-    Vector<LoaiVeMayBayDTO> loaiveDS;
-    Vector<LoaiVeMayBayDTO> loaiveDSVe;
+    private LoaiVeMayBayDTO vedichon;
+    private LoaiVeMayBayDTO vevechon;
+    private LoaiVeBLL loaiveBLL = new LoaiVeBLL();
+    private Vector<LoaiVeMayBayDTO> loaiveDS;
+    private Vector<LoaiVeMayBayDTO> loaiveDSVe;
 
     public LoaiVeMayBayDTO getVedichon() {
         return vedichon;
@@ -47,7 +47,7 @@ public class Arline_Ticket_Panel extends javax.swing.JPanel {
             danhsachloaivedi();
             jScrollPane2.setVisible(false);
             jLabel5.setVisible(false);
-        if (frame.getTimchuyenbay().chuyenbayve!=null)
+        if (frame.getTimchuyenbay().getChuyenbayve()!=null)
         {
             jScrollPane2.setVisible(true);
             jLabel5.setVisible(true);
@@ -93,7 +93,7 @@ public class Arline_Ticket_Panel extends javax.swing.JPanel {
         DefaultTableModel model ;
         model= (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        loaiveDS= loaiveBLL.DanhSachVeChieuDi(frame.getTimchuyenbay().getChuyenbaydi());
+        loaiveDS= loaiveBLL.DanhSachVeChieuDi(frame.getTimchuyenbay().getChuyenbaydi(),frame.getTimchuyenbay().getSoLuong());
         for (LoaiVeMayBayDTO a:loaiveDS)
         {
             Object[] row={a.getId(),a.getIdChuyenBay().getMaSanBayDi().getMaSanBay(),a.getIdChuyenBay().getMaSanBayDen().getMaSanBay(),a.getIdChuyenBay().getNgayDi(),a.getIdChuyenBay().getNgayDen(),a.getIdChuyenBay().getThoiGianBay(),a.getHangVe(),a.getGiaVe(),a.getSoLuongVeCon()};
@@ -107,7 +107,7 @@ public class Arline_Ticket_Panel extends javax.swing.JPanel {
         DefaultTableModel model ;
         model= (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
-        loaiveDSVe= loaiveBLL.DanhSachVeChieuVe(frame.getTimchuyenbay().getChuyenbayve());
+        loaiveDSVe= loaiveBLL.DanhSachVeChieuVe(frame.getTimchuyenbay().getChuyenbayve(),frame.getTimchuyenbay().getSoLuong());
         for (LoaiVeMayBayDTO a:loaiveDSVe)
         {  
             Object[] row={a.getId(),a.getIdChuyenBay().getMaSanBayDi().getMaSanBay(),a.getIdChuyenBay().getMaSanBayDen().getMaSanBay(),a.getIdChuyenBay().getNgayDi(),a.getIdChuyenBay().getNgayDen(),a.getIdChuyenBay().getThoiGianBay(),a.getHangVe(),a.getGiaVe(),a.getSoLuongVeCon()};
@@ -128,7 +128,7 @@ public class Arline_Ticket_Panel extends javax.swing.JPanel {
             }
 
         }
-        if (frame.getTimchuyenbay().chuyenbayve!=null)
+        if (frame.getTimchuyenbay().getChuyenbayve()!=null)
         {
         DefaultTableModel model2 ;
         model2= (DefaultTableModel) jTable2.getModel();
@@ -296,6 +296,9 @@ public class Arline_Ticket_Panel extends javax.swing.JPanel {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(0, 153, 255));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Xác nhận chọn vé");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -324,19 +327,18 @@ public class Arline_Ticket_Panel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jRadioButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -357,16 +359,21 @@ public class Arline_Ticket_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (frame.getTimchuyenbay().chuyenbayve!=null)
+        if (frame.getTimchuyenbay().getChuyenbayve()!=null)
         {
             if ((vevechon==null)||(vedichon==null))
-                JOptionPane.showMessageDialog(frame,"Có vé trống ");
+                JOptionPane.showMessageDialog(frame,"Vui lòng chọn vé cho chuyến bay .");
+            else if((loaiveDS==null)||(loaiveDSVe==null))
+                JOptionPane.showMessageDialog(frame,"Không có chuyến bay nào phù hợp . Vui lòng tìm chuyến bay khác !");      
             else
                  frame.lapHoaDon();
         }
-        else if (frame.getTimchuyenbay().chuyenbayve==null)
+        else if (frame.getTimchuyenbay().getChuyenbayve()==null)
                 if (vedichon==null)
-                JOptionPane.showMessageDialog(frame,"Có vé trống ");
+                JOptionPane.showMessageDialog(frame,"Vui lòng chọn vé cho chuyến bay .");
+                else if (loaiveDS==null)
+                    JOptionPane.showMessageDialog(frame,"Không có chuyến bay nào phù hợp . Vui lòng tìm chuyến bay khác !");   
+                else frame.lapHoaDon();
         else
             frame.lapHoaDon();
             

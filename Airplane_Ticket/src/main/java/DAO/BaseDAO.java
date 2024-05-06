@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class BaseDAO {
-    private static String jdbcURL = "jdbc:mysql://localhost:3307/ticketmanager";   // tên database
+    private static String jdbcURL = "jdbc:mysql://localhost:3306/ticketmanager";   // tên database
     private static String jdbcUsername = "root"; // tk database
-    private static String jdbcPassword = "";  // mk database
+    private static String jdbcPassword = "1234";  // mk database
     private static Connection connection;
 
     public static Connection getConnection() {   // phương thức kết nối database

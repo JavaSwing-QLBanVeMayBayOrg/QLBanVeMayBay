@@ -16,12 +16,16 @@ import java.util.Vector;
  */
 public class LoaiVeBLL {
     LoaiVeDAO loaiveDAO = new LoaiVeDAO();
-    public Vector<LoaiVeMayBayDTO> DanhSachVeChieuDi(ChuyenBayDTO chuyenbaydi) throws SQLException
+    public Vector<LoaiVeMayBayDTO> DanhSachVeChieuDi(ChuyenBayDTO chuyenbaydi,int soLuong) throws SQLException
     {
-        return loaiveDAO.DanhSachVeChieuDi(chuyenbaydi);
+        return loaiveDAO.DanhSachVeChieuDi(chuyenbaydi,soLuong);
     }
-    public Vector<LoaiVeMayBayDTO> DanhSachVeChieuVe(ChuyenBayDTO chuyenbayve) throws SQLException
+    public Vector<LoaiVeMayBayDTO> DanhSachVeChieuVe(ChuyenBayDTO chuyenbayve,int soLuong) throws SQLException
     {
-        return loaiveDAO.DanhSachVeChieuVe(chuyenbayve);
+        return loaiveDAO.DanhSachVeChieuVe(chuyenbayve,soLuong);
     }
+     public void UpdateSoLuongVe(LoaiVeMayBayDTO loaive,int soLuongCon) throws SQLException
+     {
+         loaiveDAO.UpdateSoLuongVe(loaive, soLuongCon);
+     }
 }
