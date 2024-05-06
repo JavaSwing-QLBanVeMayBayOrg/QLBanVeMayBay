@@ -4,6 +4,14 @@
  */
 package GUI;
 
+import BLL.NhanVienBLL;
+import DTO.NhanVienDTO;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author User
@@ -13,8 +21,25 @@ public class Staff extends javax.swing.JPanel {
     /**
      * Creates new form Staff
      */
+    private DefaultTableModel tblModel = new DefaultTableModel();
+    private NhanVienBLL nhanvienlist = new NhanVienBLL();
+
     public Staff() {
         initComponents();
+        inittbl();
+        fillTable();
+        jTable1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = jTable1.getSelectedRow(); // Lấy chỉ số của dòng được chọn
+                if (row != -1) { // Kiểm tra xem dòng có được chọn hay không
+                    NhanVienDTO nhanvien = NhanVienBLL.findByCMND(jTable1.getValueAt(row, 0).toString());
+                    Staff_Detail_Dialog detail = new Staff_Detail_Dialog(new javax.swing.JFrame(), true, nhanvien);
+                    detail.setVisible(true);
+                }
+            }
+        }
+        );
     }
 
     /**
@@ -31,22 +56,19 @@ public class Staff extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
+        combobox = new javax.swing.JComboBox<>();
+        textsearch = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton3 = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\User\\OneDrive101203\\Documents\\NetBeansProjects\\Airplane_Ticket\\src\\main\\java\\images\\employees.png")); // NOI18N
         jLabel1.setText(" Danh sách nhân viên");
 
         jButton2.setBackground(new java.awt.Color(0, 153, 255));
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\User\\OneDrive101203\\Documents\\NetBeansProjects\\Airplane_Ticket\\src\\main\\java\\images\\print.png")); // NOI18N
 
         jButton1.setBackground(new java.awt.Color(0, 153, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon("C:\\Users\\User\\OneDrive101203\\Documents\\NetBeansProjects\\Airplane_Ticket\\src\\main\\java\\images\\download.png")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -75,12 +97,16 @@ public class Staff extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Tìm kiếm :");
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Mã nhân viên", "Tên nhân viên", "Số điện thoại" }));
+        combobox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        combobox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Mã nhân viên", "Tên nhân viên", "Số điện thoại" }));
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTextField1.setText("jTextField1");
-        jTextField1.setBorder(null);
+        textsearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textsearch.setBorder(null);
+        textsearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textsearchActionPerformed(evt);
+            }
+        });
 
         jTable1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -137,9 +163,9 @@ public class Staff extends javax.swing.JPanel {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(combobox, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -148,9 +174,9 @@ public class Staff extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(combobox, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -161,24 +187,75 @@ public class Staff extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        Staff_Add_Dialog add = new Staff_Add_Dialog(new javax.swing.JFrame(), true);
+        add.setLocationRelativeTo(null);
+        add.setVisible(true);
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void textsearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textsearchActionPerformed
+        String option = combobox.getItemAt(combobox.getSelectedIndex());
+        switch (option) {
+            case "Tất cả":
+                fillTableSearch(NhanVienBLL.SearchBLL(textsearch.getText(), "all"));
+                break;
+            case "Mã nhân viên":
+                fillTableSearch(NhanVienBLL.SearchBLL(textsearch.getText(), "id"));
+                break;
+            case "Tên nhân viên":
+                fillTableSearch(NhanVienBLL.SearchBLL(textsearch.getText(), "name"));
+                break;
+            case "Số điện thoại":
+                fillTableSearch(NhanVienBLL.SearchBLL(textsearch.getText(), "phone"));
+                break;
+        }
+        
+    }//GEN-LAST:event_textsearchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> combobox;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField textsearch;
     // End of variables declaration//GEN-END:variables
+
+    private void fillTable() {
+        tblModel.setRowCount(0);
+        for (NhanVienDTO nhanvien : nhanvienlist.findAll()) {
+            String hoten = nhanvien.getHo() + " " + nhanvien.getTen();
+            String cmnd = nhanvien.getCmnd();
+            String sdt = nhanvien.getSoDienThoai();
+            tblModel.addRow(new Object[]{cmnd, hoten, sdt, "Xem chi tiết"});
+        }
+        tblModel.fireTableDataChanged();
+    }
+
+    private void inittbl() {
+        String[] colums = new String[]{"CMND", "Họ và tên", "Số điện thoại", "Xem chi tiết"};
+        tblModel.setColumnIdentifiers(colums);
+        jTable1.setModel(tblModel);
+    }
+
+    private void fillTableSearch(List<NhanVienDTO> nhanvienDTO) {
+        tblModel.setRowCount(0);
+        for (NhanVienDTO nhanvien : nhanvienDTO) {
+            String hoten = nhanvien.getHo() + " " + nhanvien.getTen();
+            String cmnd = nhanvien.getCmnd();
+            String sdt = nhanvien.getSoDienThoai();
+            tblModel.addRow(new Object[]{cmnd, hoten, sdt, "Xem chi tiết"});
+        }
+        tblModel.fireTableDataChanged();
+    }
+
 }
