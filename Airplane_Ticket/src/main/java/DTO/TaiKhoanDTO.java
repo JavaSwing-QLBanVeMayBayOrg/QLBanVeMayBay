@@ -1,18 +1,20 @@
 package DTO;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 public class TaiKhoanDTO {
     private String username;
     private String password;
-    private LocalDateTime ngayCap;
+    private Date ngayCap;
     private boolean tinhTrang;
     private NhanVienDTO cmndNhanVien;
 
     public TaiKhoanDTO() {
     }
 
-    public TaiKhoanDTO(String username, String password, LocalDateTime ngayCap, boolean tinhTrang, NhanVienDTO cmndNhanVien) {
+
+    public TaiKhoanDTO(String userName, String passWord, Date ngayCap, boolean tinhTrang, String cmnd) {
         this.username = username;
         this.password = password;
         this.ngayCap = ngayCap;
@@ -36,11 +38,11 @@ public class TaiKhoanDTO {
         this.password = password;
     }
 
-    public LocalDateTime getNgayCap() {
+    public Date getNgayCap() {
         return ngayCap;
     }
 
-    public void setNgayCap(LocalDateTime ngayCap) {
+    public void setNgayCap(Date ngayCap) {
         this.ngayCap = ngayCap;
     }
 

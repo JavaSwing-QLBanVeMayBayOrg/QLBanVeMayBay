@@ -82,37 +82,36 @@ public class NhanVienDAO {
     }
 
     public void AddTK(String cmnd) {
-    try {
-        // Tạo câu lệnh SQL insert dữ liệu vào bảng nhanvien
-        String sql = "INSERT INTO taikhoan (userName, passWord, ngayCap, tinhTrang, cmndNhanVien) VALUES (?, ?, ?, ?, ?)";
+        try {
+            // Tạo câu lệnh SQL insert dữ liệu vào bảng nhanvien
+            String sql = "INSERT INTO taikhoan (userName, passWord, ngayCap, tinhTrang, cmndNhanVien) VALUES (?, ?, ?, ?, ?)";
 
-        // Lấy kết nối tới cơ sở dữ liệu
-        Connection connection = BaseDAO.getConnection();
+            // Lấy kết nối tới cơ sở dữ liệu
+            Connection connection = BaseDAO.getConnection();
 
-        // Tạo PreparedStatement với câu lệnh SQL insert
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            // Tạo PreparedStatement với câu lệnh SQL insert
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        // Thiết lập giá trị cho các tham số trong câu lệnh SQL insert từ đối tượng NhanVienDTO
-        java.util.Date currentDate = new java.util.Date(); // Sử dụng constructor hiện tại của java.util.Date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = dateFormat.format(currentDate);
-        preparedStatement.setString(1, cmnd);
-        preparedStatement.setString(2, "1234");
-        java.util.Date utilDate = dateFormat.parse(formattedDate);
-        preparedStatement.setDate(3, new java.sql.Date(utilDate.getTime()));
-        preparedStatement.setByte(4, (byte) 1);
-        preparedStatement.setString(5, cmnd);
+            // Thiết lập giá trị cho các tham số trong câu lệnh SQL insert từ đối tượng NhanVienDTO
+            java.util.Date currentDate = new java.util.Date(); // Sử dụng constructor hiện tại của java.util.Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = dateFormat.format(currentDate);
+            preparedStatement.setString(1, cmnd);
+            preparedStatement.setString(2, "1234");
+            java.util.Date utilDate = dateFormat.parse(formattedDate);
+            preparedStatement.setDate(3, new java.sql.Date(utilDate.getTime()));
+            preparedStatement.setByte(4, (byte) 1);
+            preparedStatement.setString(5, cmnd);
 
-        // Thực thi câu lệnh insert
-        int rowsInserted = preparedStatement.executeUpdate();
+            // Thực thi câu lệnh insert
+            int rowsInserted = preparedStatement.executeUpdate();
 
-        // Đóng kết nối
-        BaseDAO.closeConnection();
-    } catch (SQLException | ParseException e) {
-        e.printStackTrace();
+            // Đóng kết nối
+            BaseDAO.closeConnection();
+        } catch (SQLException | ParseException e) {
+            e.printStackTrace();
+        }
     }
-}
-
 
     public List<NhanVienDTO> getAllDB() {
         try {
@@ -139,10 +138,18 @@ public class NhanVienDAO {
         return nhanvienList;
     }
 
-    public void updateTT(String cmnd) throws SQLException {
+    public void updateTT(String cmnd, String tt) throws SQLException {
         PreparedStatement preparedStatement = BaseDAO.getConnection()
-                .prepareStatement("UPDATE nhanvien SET tinhTrang = ? WHERE cmnd = ?");
-        preparedStatement.setByte(1, (byte) 0);
+                .prepareStatement("UPDATE taikhoan SET tinhTrang = ? WHERE cmndNhanVien = ?");
+        switch(tt) {
+        
+        case "del":
+            preparedStatement.setByte(1, (byte) 0);
+        case "add":
+            preparedStatement.setByte(1, (byte) 1);
+        
+        }
+        
         preparedStatement.setString(2, cmnd);
         int rowsAffected = preparedStatement.executeUpdate();
         if (rowsAffected > 0) {
@@ -219,6 +226,26 @@ public class NhanVienDAO {
             e.printStackTrace();
         }
         return nhanVienList;
+    }
+
+    public NhanVienDTO getCMND(String user) throws SQLException {
+        Connection connection = BaseDAO.getConnection();
+            PreparedStatement preparedStatement = null;
+
+            String sql = "SELECT nhanvien.cmnd FROM taikhoan INNER JOIN nhanvien ON taikhoan.cmndNhanVien = nhanvien.cmnd WHERE taikhoan.userName = '?'";
+            preparedStatement.setString(1, user);
+            ResultSet resultSet = preparedStatement.executeQuery();
+        NhanVienDTO nhanVien = new NhanVienDTO();    
+        while (resultSet.next()) {
+            
+                NhanVienDTO nhanvien = new NhanVienDTO();
+                nhanvien.setCmnd(resultSet.getString("cmnd"));
+                nhanvien.setHo(resultSet.getString("ho"));
+                nhanvien.setTen(resultSet.getString("ten"));
+                nhanvien.setSoDienThoai(resultSet.getString("soDienThoai"));
+                nhanVien=nhanvien;
+        }
+        return nhanVien;
     }
 
 }

@@ -6,6 +6,8 @@ package GUI;
 
 import BLL.NhanVienBLL;
 import DTO.NhanVienDTO;
+import DTO.TaiKhoanDTO;
+import java.awt.Frame;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -301,12 +303,19 @@ public class Staff_Detail_Dialog extends java.awt.Dialog {
         NhanVienDTO nhanvien = NhanVienBLL.findByCMND(manv.getText());
         nhanvien.setTinhTrang(false);
         try {
-            NhanVienBLL.updateTT(nhanvien.getCmnd());
+            NhanVienBLL.updateTT(nhanvien.getCmnd(),"del");
         } catch (SQLException ex) {
             Logger.getLogger(Staff_Detail_Dialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt){
+        
+        NhanVienDTO nv = NhanVienBLL.findByCMND(manv.getText()) ; 
+        TaiKhoanDTO tk = TaiKhoanBLL.findByCMND(nv.getCmnd() );
+        Staff_account_Dialog accdia = new Staff_account_Dialog(new javax.swing.JFrame(), true, tk);
+    }
+    
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         NhanVienDTO nhanvien = new NhanVienDTO();
         nhanvien.setCmnd(id.getText());

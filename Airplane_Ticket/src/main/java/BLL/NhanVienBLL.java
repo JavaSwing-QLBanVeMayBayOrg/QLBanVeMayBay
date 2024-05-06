@@ -40,9 +40,16 @@ public class NhanVienBLL {
         return null;
     }
     
-    public static void updateTT(String cmnd) throws SQLException{
+    public static NhanVienDTO findByUser(String user) throws SQLException {
+        NhanVienDTO nvBLL = new NhanVienDTO();
         NhanVienDAO nhanvienDAO = new NhanVienDAO();
-        nhanvienDAO.updateTT(cmnd);
+        nvBLL = nhanvienDAO.getCMND(user);
+        return nvBLL;
+    }
+    
+    public static void updateTT(String cmnd, String tt) throws SQLException{
+        NhanVienDAO nhanvienDAO = new NhanVienDAO();
+        nhanvienDAO.updateTT(cmnd, tt);
     } 
     
     public static void update(NhanVienDTO nhanvien, String cmnd) throws SQLException{
