@@ -100,4 +100,89 @@ public class MayBayDAO {
         }
         return mayBayDTOList;
     }
+
+    public MayBayDTO findByid(int id) {
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("SELECT id, ten, soGheH1, soGheH2, status FROM maybay WHERE id = ? ");
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                MayBayDTO mayBayDTO = new MayBayDTO();
+                mayBayDTO.setId(resultSet.getInt("id"));
+                mayBayDTO.setTen(resultSet.getString("ten"));
+                mayBayDTO.setSoGheH1(resultSet.getInt("soGheH1"));
+                mayBayDTO.setSoGheH2(resultSet.getInt("soGheH2"));
+                mayBayDTO.setStatus(resultSet.getBoolean("status"));
+                BaseDAO.closeConnection();
+                return mayBayDTO;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean create(MayBayDTO mayBayDTO) {
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("INSERT INTO maybay (ten, soGheH1, soGheH2, status) \n" +
+                            "VALUES (?, ?, ?, ?) ");
+
+            preparedStatement.setString(1, mayBayDTO.getTen());
+            preparedStatement.setInt(2, 54);
+            preparedStatement.setInt(3, 228);
+            preparedStatement.setBoolean(4, mayBayDTO.isStatus());
+            boolean success = preparedStatement.executeUpdate() > 0;
+            BaseDAO.closeConnection();
+            return success;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean update(MayBayDTO mayBayDTO) {
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("UPDATE maybay SET ten = ?, " +
+                            "soGheH1 = ?, soGheH2 = ?, status = ? WHERE id = ? ");
+
+            preparedStatement.setString(1, mayBayDTO.getTen());
+            preparedStatement.setInt(2, mayBayDTO.getSoGheH1());
+            preparedStatement.setInt(3, mayBayDTO.getSoGheH2());
+            preparedStatement.setBoolean(4, mayBayDTO.isStatus());
+            preparedStatement.setInt(5, mayBayDTO.getId());
+            boolean success = preparedStatement.executeUpdate() > 0;
+            BaseDAO.closeConnection();
+            return success;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean delete(MayBayDTO mayBayDTO) {
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("DELETE FROM maybay WHERE id = ? " +
+                            "AND NOT EXISTS (" +
+                            "SELECT 1 FROM chuyenbay " +
+                            "WHERE idMayBay = ?)");
+
+            preparedStatement.setInt(1, mayBayDTO.getId());
+            preparedStatement.setInt(2, mayBayDTO.getId());
+
+            boolean success = preparedStatement.executeUpdate() > 0;
+            BaseDAO.closeConnection();
+            return success;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 }
