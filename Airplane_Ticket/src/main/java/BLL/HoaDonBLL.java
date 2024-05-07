@@ -21,4 +21,10 @@ public class HoaDonBLL {
         return HoaDonDAO.getAll(user);
     }
     
+    public String getSoluongve(){
+        return String.valueOf(HoaDonDAO.getSoluongve()) ;
+    }
+    public String getDoanhthu(){
+        return HoaDonDAO.getDoanhthu() ;
+    }
 }

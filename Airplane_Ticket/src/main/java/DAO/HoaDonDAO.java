@@ -22,6 +22,58 @@ import java.util.List;
  */
 public class HoaDonDAO {
 
+    
+
+    public static String getDoanhthu() {
+        try {
+            String sql = "SELECT SUM(hdvb.tongTien) AS TongTienBanVe " +
+                  "FROM hoaDonVeBan hdvb " +
+                  "JOIN vemaybay vmb ON hdvb.id = vmb.idHoaDonVeBan;";
+            // Lấy kết nối tới cơ sở dữ liệu
+            Connection connection = BaseDAO.getConnection();
+
+            // Tạo PreparedStatement với câu lệnh SQL select
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            // Thực thi câu lệnh select
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            BaseDAO.closeConnection();
+            return resultSet.getString("T1");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static int getSoluongve() {
+        try {
+            String sql = "SELECT SUM(T1.So_Ve_Ban_Ra) AS 'Tong_So_Ve_Ban_Ra'\n"
+                    + "FROM (\n"
+                    + "    SELECT cb.id AS 'ID_MayBay', sbDi.ten AS 'Noi_Bat_Dau', sbDen.ten AS 'Noi_Dap', COUNT(vmb.id) AS 'So_Ve_Ban_Ra'\n"
+                    + "    FROM chuyenbay cb\n"
+                    + "    INNER JOIN sanbay sbDi ON cb.maSanBayDi = sbDi.maSanBay\n"
+                    + "    INNER JOIN sanbay sbDen ON cb.maSanBayDen = sbDen.maSanBay\n"
+                    + "    LEFT JOIN vemaybay vmb ON cb.id = vmb.id\n"
+                    + "    GROUP BY cb.id, sbDi.ten, sbDen.ten\n"
+                    + ") AS T1;";
+            // Lấy kết nối tới cơ sở dữ liệu
+            Connection connection = BaseDAO.getConnection();
+
+            // Tạo PreparedStatement với câu lệnh SQL select
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            // Thực thi câu lệnh select
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            BaseDAO.closeConnection();
+            return resultSet.getInt("T1");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public static List<TongHopChuyenBayDTO> getAll(String username) {
         List<TongHopChuyenBayDTO> tongHopChuyenBayList = new ArrayList<>();
         try {
