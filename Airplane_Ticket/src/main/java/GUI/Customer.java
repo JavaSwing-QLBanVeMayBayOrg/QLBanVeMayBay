@@ -185,7 +185,8 @@ public class Customer extends javax.swing.JPanel {
         tableCustomer = new javax.swing.JTable();
         cmnd = new javax.swing.JTextField();
         btnView = new javax.swing.JButton();
-
+        cmnd.setVisible(false);
+        cmnd.setEditable(false);
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
         jDialog1Layout.setHorizontalGroup(
@@ -342,6 +343,26 @@ public class Customer extends javax.swing.JPanel {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableCustomer.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tableCustomer.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
         ));
         tableCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -349,6 +370,12 @@ public class Customer extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(tableCustomer);
+        if (tableCustomer.getColumnModel().getColumnCount() > 0) {
+            tableCustomer.getColumnModel().getColumn(0).setResizable(false);
+            tableCustomer.getColumnModel().getColumn(1).setResizable(false);
+            tableCustomer.getColumnModel().getColumn(2).setResizable(false);
+            tableCustomer.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         cmnd.setEditable(false);
         cmnd.addActionListener(new java.awt.event.ActionListener() {
