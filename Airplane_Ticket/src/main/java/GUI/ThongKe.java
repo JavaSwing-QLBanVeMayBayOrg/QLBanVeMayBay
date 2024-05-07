@@ -4,6 +4,14 @@
  */
 package GUI;
 
+import BLL.HoaDonBLL;
+import javax.swing.table.DefaultTableModel;
+import DTO.HoaDonVeBanDTO;
+import DTO.TaiKhoanDTO;
+import DTO.TongHopChuyenBayDTO;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author User
@@ -13,8 +21,17 @@ public class ThongKe extends javax.swing.JPanel {
     /**
      * Creates new form ThongKe
      */
+    private DefaultTableModel tblModel = new DefaultTableModel();
+    private TaiKhoanDTO taikhoan = new TaiKhoanDTO();
+    private Login loginFrame;
+
     public ThongKe() {
         initComponents();
+        inittbl();
+        initThongKe("admin");
+        HoaDonBLL hd = new HoaDonBLL();
+        veban.setText(hd.getSoluongve());
+        doanhthu.setText(hd.getDoanhthu());
     }
 
     /**
@@ -28,28 +45,26 @@ public class ThongKe extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        veban = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
+        doanhthu = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox<>();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\User\\OneDrive101203\\Documents\\NetBeansProjects\\Airplane_Ticket\\src\\main\\java\\images\\bar-chart.png")); // NOI18N
         jLabel1.setText(" Thống kê");
         jLabel1.setToolTipText("");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tổng số vé bán ra", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 16))); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(732, 438));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("jLabel3");
+        veban.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        veban.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -57,22 +72,21 @@ public class ThongKe extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                .addComponent(veban, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(veban, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tổng doanh thu", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 16))); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("jLabel6");
+        doanhthu.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        doanhthu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -80,21 +94,21 @@ public class ThongKe extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(doanhthu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(doanhthu, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel4.setText("Vé bán chạy");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -102,7 +116,7 @@ public class ThongKe extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Nơi đi", "Nơi đến", "Hạng vé", "Số vé bán ra"
+                "ID máy bay", "Nơi đi", "Nơi đến", "Số vé bán ra"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -113,13 +127,13 @@ public class ThongKe extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jTable2.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setResizable(false);
-            jTable2.getColumnModel().getColumn(1).setResizable(false);
-            jTable2.getColumnModel().getColumn(2).setResizable(false);
-            jTable2.getColumnModel().getColumn(3).setResizable(false);
+        table.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(table);
+        if (table.getColumnModel().getColumnCount() > 0) {
+            table.getColumnModel().getColumn(0).setResizable(false);
+            table.getColumnModel().getColumn(1).setResizable(false);
+            table.getColumnModel().getColumn(2).setResizable(false);
+            table.getColumnModel().getColumn(3).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -147,7 +161,7 @@ public class ThongKe extends javax.swing.JPanel {
         jLabel9.setText("Tìm kiếm :");
 
         jComboBox2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Ngày ", "Tháng", "Năm" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -189,16 +203,36 @@ public class ThongKe extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel doanhthu;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable table;
+    private javax.swing.JLabel veban;
     // End of variables declaration//GEN-END:variables
+
+    private void inittbl() {
+        String[] colums = new String[]{"ID chuyến bay", "Nơi đi", "Nơi đến", "Số lượng vé"};
+        tblModel.setColumnIdentifiers(colums);
+        table.setModel(tblModel);
+    }
+    
+    private void initThongKe(String username) {
+        tblModel.setRowCount(0);
+        HoaDonBLL hoaDonBLL = new HoaDonBLL();
+        List<TongHopChuyenBayDTO> hoadonlist = hoaDonBLL.findAll("admin");
+
+        for (TongHopChuyenBayDTO hoadon : hoadonlist) {
+            tblModel.addRow(new Object[]{hoadon.getID(), hoadon.getNoiDi(), hoadon.getNoiDen(), hoadon.getSoluongve() });
+        }
+        // Cập nhật lại bảng
+        tblModel.fireTableDataChanged();
+        
+    }
+
 }

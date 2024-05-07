@@ -4,6 +4,11 @@
  */
 package GUI;
 
+import BLL.NhanVienBLL;
+import DTO.NhanVienDTO;
+import java.sql.Date;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author User
@@ -13,6 +18,8 @@ public class Staff_Add_Dialog extends java.awt.Dialog {
     /**
      * Creates new form Add_Staff_Dialog
      */
+    NhanVienBLL nhanvienBLL = new NhanVienBLL();
+
     public Staff_Add_Dialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -64,14 +71,17 @@ public class Staff_Add_Dialog extends java.awt.Dialog {
         jLabel4.setText("Họ và tên :");
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField1.setText("jTextField1");
         jTextField1.setBorder(null);
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel7.setText("Ngày sinh :");
 
         jTextField6.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField6.setText("jTextField6");
         jTextField6.setBorder(null);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -82,24 +92,21 @@ public class Staff_Add_Dialog extends java.awt.Dialog {
         jComboBox1.setBorder(null);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel9.setText("Căn cước công dân :");
+        jLabel9.setText("ID:");
 
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField2.setText("jTextField2");
         jTextField2.setBorder(null);
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel13.setText("Số điện thoại :");
+        jLabel13.setText("SĐT:");
 
         jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField4.setText("jTextField3");
         jTextField4.setBorder(null);
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel14.setText("Địa chỉ :");
 
         jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField5.setText("jTextField4");
         jTextField5.setBorder(null);
 
         jButton4.setBackground(new java.awt.Color(0, 153, 255));
@@ -122,6 +129,11 @@ public class Staff_Add_Dialog extends java.awt.Dialog {
         jButton5.setMaximumSize(new java.awt.Dimension(150, 30));
         jButton5.setMinimumSize(new java.awt.Dimension(150, 30));
         jButton5.setPreferredSize(new java.awt.Dimension(150, 30));
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -135,29 +147,30 @@ public class Staff_Add_Dialog extends java.awt.Dialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField1))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField5))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+                                        .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.TRAILING)))))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -227,8 +240,73 @@ public class Staff_Add_Dialog extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // Lấy dữ liệu từ các trường nhập vào
+        String hoTen = jTextField1.getText().trim();
+
+// Tách họ và tên
+        int index = hoTen.lastIndexOf(' '); // Tìm vị trí cuối cùng của dấu cách trong chuỗi
+        String ho = hoTen.substring(0, index).trim(); // Lấy phần trước dấu cách là họ
+        String ten = hoTen.substring(index + 1).trim(); // Lấy phần sau dấu cách là tên
+
+        if (ho.isEmpty() || ten.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ họ và tên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String cmnd = jTextField2.getText().trim();
+        String sdt = jTextField4.getText().trim();
+        String diaChi = jTextField5.getText().trim();
+        String ngaySinhStr = jTextField6.getText().trim();
+
+// Kiểm tra xem các trường đã được điền đầy đủ hay không
+        if (cmnd.isEmpty() || sdt.isEmpty() || diaChi.isEmpty() || ngaySinhStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+// Kiểm tra định dạng của ngày sinh
+        try {
+            Date.valueOf(ngaySinhStr); // Kiểm tra định dạng ngày sinh
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, "Ngày sinh không hợp lệ! Vui lòng nhập lại theo định dạng yyyy-MM-dd.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+// Kiểm tra xem cmnd đã tồn tại trong CSDL hay chưa
+        NhanVienDTO existingNhanVien;
+        existingNhanVien = NhanVienBLL.findByCMND(cmnd);
+        if (existingNhanVien != null) {
+            JOptionPane.showMessageDialog(this, "CMND đã tồn tại trong CSDL!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+// Tạo đối tượng NhanVienDTO từ dữ liệu nhập vào
+        NhanVienDTO nhanvien = new NhanVienDTO();
+        nhanvien.setCmnd(cmnd);
+        nhanvien.setHo(ho);
+        nhanvien.setTen(ten);
+        nhanvien.setSoDienThoai(sdt);
+//nhanvien.setDiaChi(diaChi);
+        nhanvien.setNgaySinh(Date.valueOf(ngaySinhStr)); // Chuyển đổi ngày sinh thành java.sql.Date
+
+// Gọi phương thức thêm của BLL
+        nhanvienBLL.insertone(nhanvien);
+
+// Kiểm tra kết quả và thông báo cho người dùng
+
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
