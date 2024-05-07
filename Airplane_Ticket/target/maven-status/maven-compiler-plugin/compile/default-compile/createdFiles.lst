@@ -1,5 +1,6 @@
 GUI\ChiTietSanBay_DaXoa_Dialog$1.class
 DAO\KhachHangDAO.class
+BLL\MayBayBLL.class
 BLL\KhachHangBLL.class
 GUI\TimChuyenBay_panel$7.class
 BLL\HoaDonVeBanBLL.class
@@ -15,12 +16,14 @@ DTO\KhachHangDTO.class
 DAO\HoaDonVeBanDAO.class
 GUI\Customer$1.class
 GUI\Ticket_Book_panel$4.class
+GUI\MayBay_Panel$4.class
 GUI\Staff_Add_Dialog$5$1.class
 GUI\TimChuyenBay_panel$2.class
 GUI\Customer$7.class
 GUI\SanBay_Panel$6.class
 GUI\Customer_Add_Dialog$7.class
 GUI\Arline_Ticket_Panel$5.class
+GUI\MayBay_Panel$3.class
 GUI\TimChuyenBay_panel$1.class
 GUI\SanBayDi_Dialog$3.class
 GUI\Login$2.class
@@ -38,6 +41,7 @@ GUI\Customer$5.class
 GUI\SanBayDi_Dialog$1.class
 GUI\Clock.class
 GUI\TimChuyenBay_panel$3.class
+GUI\MayBay_Panel$5.class
 DTO\SanBayDTO.class
 GUI\Staff_Add_Dialog$4.class
 test\JComboBoxExample$1.class
@@ -52,6 +56,8 @@ GUI\Staff$5.class
 GUI\Customer$3.class
 Util\DateJcalendarUtil.class
 GUI\Customer_Update.class
+GUI\TaiKhoanBLL.class
+GUI\MayBay_Panel$6.class
 DTO\ChuyenBayDTO.class
 com\mycompany\airlineticket\AirlineTicket.class
 Util\DateUtil.class
@@ -71,6 +77,7 @@ GUI\Customer_Update$2.class
 GUI\Arline_Ticket_Panel$7.class
 DAO\HangThanThietDAO.class
 GUI\SanBayDi_Dialog$5.class
+DTO\MayBaySearchDTO.class
 GUI\TimChuyenBay_panel$9.class
 GUI\HomePage.class
 GUI\Arline_Ticket_Panel$6.class
@@ -78,6 +85,7 @@ test\JComboBoxExample.class
 GUI\Staff$1.class
 GUI\Customer.class
 GUI\SanBay_Panel$10.class
+DAO\MayBayDAO.class
 DTO\NhanVienDTO.class
 GUI\SanBayDi_Dialog$4.class
 DTO\KhachHangSearchDTO.class
