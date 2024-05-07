@@ -101,7 +101,10 @@
           <Font name="Segoe UI" size="16" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="Danh s&#xe1;ch s&#xe2;n bay"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="2" name="C:\Users\ADMIN\Desktop\JAVA CLASS\GIT\QLBanVeMayBay\Airplane_Ticket\src\main\java\images\Airfield.png"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value=" Danh s&#xe1;ch s&#xe2;n bay"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton2">
