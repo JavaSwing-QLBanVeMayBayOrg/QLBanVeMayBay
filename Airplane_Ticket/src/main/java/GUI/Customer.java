@@ -353,17 +353,6 @@ public class Customer extends javax.swing.JPanel {
             }
         });
         tableCustomer.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tableCustomer.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         tableCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tableCustomerMouseClicked(evt);
