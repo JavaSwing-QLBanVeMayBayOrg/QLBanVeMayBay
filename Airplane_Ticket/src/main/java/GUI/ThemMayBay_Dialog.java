@@ -30,7 +30,7 @@ public class ThemMayBay_Dialog extends java.awt.Dialog {
     }
 
     private void initCbxTrangThai() {
-        String[] descriptions = {"Tất cả", "Đang bay", "Dừng bay"};
+        String[] descriptions = {"Tất cả", "Khả dụng", "Không khả dụng"};
         String[] values = {"", "true", "false"};
         DefaultComboBoxModel<String> cbxModel = new DefaultComboBoxModel<>(descriptions);
         for (int i = 0; i < descriptions.length; i++) {
@@ -66,7 +66,7 @@ public class ThemMayBay_Dialog extends java.awt.Dialog {
                 closeDialog(evt);
             }
         });
-
+        setTitle("Thêm máy bay");
         jPanel1.setBackground(new java.awt.Color(0, 153, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(100, 40));
 
@@ -189,6 +189,13 @@ public class ThemMayBay_Dialog extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        StringBuilder errorMessages = new StringBuilder();
+        mayBayBLL.validateNameExists(errorMessages, this);
+        mayBayBLL.validate(errorMessages, this);
+        if (!errorMessages.isEmpty()) {
+            JOptionPane.showMessageDialog(null, errorMessages, "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         MayBayDTO mayBayDTO = new MayBayDTO();
         mayBayDTO.setTen(name.getText());
         mayBayDTO.setSoGheH1(Integer.parseInt(soGheThuongGia.getText()));
@@ -205,9 +212,31 @@ public class ThemMayBay_Dialog extends java.awt.Dialog {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        mayBay_panel.setCheckSelectedRow(false);
         mayBay_panel.loadDataTable();
         closeDialog(null);
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    @Override
+    public String getName() {
+        return name.getText();
+    }
+
+    public MayBayBLL getMayBayBLL() {
+        return mayBayBLL;
+    }
+
+    public JTextField getSoGhePhoThong() {
+        return soGhePhoThong;
+    }
+
+    public JTextField getSoGheThuongGia() {
+        return soGheThuongGia;
+    }
+
+    public JComboBox<String> getStatus() {
+        return status;
+    }
 
     /**
      * @param args the command line arguments

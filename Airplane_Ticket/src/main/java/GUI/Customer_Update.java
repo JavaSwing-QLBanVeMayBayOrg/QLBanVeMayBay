@@ -417,6 +417,7 @@ public class Customer_Update extends javax.swing.JFrame {
 
             if (khachHangBLL.update(khachHangDTO)) {
                 close();
+                customer.setCheckSelectedRow(false);
                 customer.loadDataTable();
                 JOptionPane.showMessageDialog(null, "     Chỉnh sửa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             } else {

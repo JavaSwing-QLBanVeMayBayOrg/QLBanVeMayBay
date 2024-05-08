@@ -47,11 +47,11 @@ public class MayBay_Update extends javax.swing.JFrame {
         name.setText(mayBayDTO.getTen());
         soGheThuongGia.setText(String.valueOf(mayBayDTO.getSoGheH1()));
         soGhePhoThong.setText(String.valueOf(mayBayDTO.getSoGheH2()));
-        status.setSelectedIndex(Integer.parseInt(String.valueOf(cbxTinhTrangMap.get(String.valueOf(mayBayDTO.isStatus())).equalsIgnoreCase("Đang bay") ? '0' : '1')));
+        status.setSelectedIndex(Integer.parseInt(String.valueOf(cbxTinhTrangMap.get(String.valueOf(mayBayDTO.isStatus())).equalsIgnoreCase("Khả dụng") ? '0' : '1')));
     }
 
     private void initCbxTinhTrang() {
-        String[] descriptions = {"Đang bay", "Dừng bay"};
+        String[] descriptions = {"Khả dụng", "Không khả dụng"};
         String[] values = {"true", "false"};
         DefaultComboBoxModel<String> cbxModel = new DefaultComboBoxModel<>(descriptions);
         for (int i = 0; i < descriptions.length; i++) {
@@ -141,24 +141,14 @@ public class MayBay_Update extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel4.setText("Họ tên:");
+        jLabel4.setText("Tên máy bay:");
 
         name.setBorder(null);
-        name.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameActionPerformed(evt);
-            }
-        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel5.setText("Số ghế thương gia:");
 
         soGheThuongGia.setBorder(null);
-        soGheThuongGia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                soGheThuongGiaActionPerformed(evt);
-            }
-        });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setText("Số ghế phổ thông:");
@@ -178,13 +168,13 @@ public class MayBay_Update extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(soGhePhoThong, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(name, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(soGheThuongGia, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(status, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(status, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(42, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -238,7 +228,18 @@ public class MayBay_Update extends javax.swing.JFrame {
             return;
         }
 
-        int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn chỉnh sửa khách hàng "
+        StringBuilder errorMessages = new StringBuilder();
+        if (!mayBayDTO.getTen().equalsIgnoreCase(name.getText())) {
+            mayBayBLL.validateNameExists(errorMessages, this);
+        }
+        mayBayBLL.validate(errorMessages, this);
+
+        if (!errorMessages.isEmpty()) {
+            JOptionPane.showMessageDialog(null, errorMessages, "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn chỉnh sửa máy bay "
                 + mayBayDTO.getTen(), "Xác nhận chỉnh sửa máy bay", JOptionPane.YES_NO_OPTION);
 
         if (choice == JOptionPane.YES_NO_OPTION) {
@@ -257,6 +258,7 @@ public class MayBay_Update extends javax.swing.JFrame {
 
             if (mayBayBLL.update(mayBayDTO)) {
                 close();
+                mayBay_panel.setCheckSelectedRow(false);
                 mayBay_panel.loadDataTable();
                 JOptionPane.showMessageDialog(null, "     Chỉnh sửa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -266,13 +268,22 @@ public class MayBay_Update extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nameActionPerformed
+    public MayBayBLL getMayBayBLL() {
+        return mayBayBLL;
+    }
 
-    private void soGheThuongGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_soGheThuongGiaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_soGheThuongGiaActionPerformed
+    @Override
+    public String getName() {
+        return name.getText();
+    }
+
+    public JTextField getSoGhePhoThong() {
+        return soGhePhoThong;
+    }
+
+    public JTextField getSoGheThuongGia() {
+        return soGheThuongGia;
+    }
 
     /**
      * @param args the command line arguments

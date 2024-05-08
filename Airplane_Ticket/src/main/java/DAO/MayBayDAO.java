@@ -125,6 +125,31 @@ public class MayBayDAO {
         return null;
     }
 
+    public MayBayDTO findByName(String name) {
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("SELECT id, ten, soGheH1, soGheH2, status\n" +
+                            "FROM maybay\n" +
+                            "WHERE LOWER(ten) = LOWER(?) ");
+
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                MayBayDTO mayBayDTO = new MayBayDTO();
+                mayBayDTO.setId(resultSet.getInt("id"));
+                mayBayDTO.setTen(resultSet.getString("ten"));
+                mayBayDTO.setSoGheH1(resultSet.getInt("soGheH1"));
+                mayBayDTO.setSoGheH2(resultSet.getInt("soGheH2"));
+                mayBayDTO.setStatus(resultSet.getBoolean("status"));
+                BaseDAO.closeConnection();
+                return mayBayDTO;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean create(MayBayDTO mayBayDTO) {
         try {
             PreparedStatement preparedStatement = BaseDAO.getConnection()
