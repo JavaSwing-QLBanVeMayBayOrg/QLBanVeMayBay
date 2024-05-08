@@ -33,13 +33,13 @@
                       <Component id="btnUpdate" min="-2" pref="234" max="-2" attributes="0"/>
                   </Group>
                   <Component id="soGhePhoThong" pref="477" max="32767" attributes="0"/>
-                  <Component id="jLabel4" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
                   <Component id="jLabel3" alignment="0" min="-2" pref="166" max="-2" attributes="0"/>
                   <Component id="name" alignment="0" pref="477" max="32767" attributes="0"/>
                   <Component id="jLabel5" alignment="0" min="-2" pref="166" max="-2" attributes="0"/>
                   <Component id="soGheThuongGia" alignment="0" pref="477" max="32767" attributes="0"/>
                   <Component id="jLabel6" alignment="0" min="-2" pref="166" max="-2" attributes="0"/>
                   <Component id="status" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jLabel4" alignment="0" min="-2" pref="115" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="42" max="32767" attributes="0"/>
           </Group>
@@ -180,7 +180,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="16" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="H&#x1ecd; t&#xea;n:"/>
+        <Property name="text" type="java.lang.String" value="T&#xea;n m&#xe1;y bay:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="name">

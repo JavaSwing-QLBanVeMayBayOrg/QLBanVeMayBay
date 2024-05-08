@@ -49,13 +49,13 @@ public class MayBay_Panel extends javax.swing.JPanel {
         for (MayBayDTO mayBayDTO : mayBayBLL.search(mayBaySearchDTO)) {
             tblModel.addRow(new Object[]{mayBayDTO.getId(), mayBayDTO.getTen(),
                     mayBayDTO.getSoGheH1(), mayBayDTO.getSoGheH2(),
-                    mayBayDTO.isStatus() ? "Đang bay" : "Dừng bay"});
+                    mayBayDTO.isStatus() ? "Khả dụng" : "Không khả dụng"});
         }
         tblModel.fireTableDataChanged();
     }
 
     private void initCbxTrangThai() {
-        String[] descriptions = {"Tất cả", "Đang bay", "Dừng bay"};
+        String[] descriptions = {"Tất cả", "Khả dụng", "Không khả dụng"};
         String[] values = {"", "true", "false"};
         DefaultComboBoxModel<String> cbxModel = new DefaultComboBoxModel<>(descriptions);
         for (int i = 0; i < descriptions.length; i++) {
@@ -439,7 +439,7 @@ public class MayBay_Panel extends javax.swing.JPanel {
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         refreshInputSearch();
         if (!checkSelectedRow) {
-            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng khách hàng muốn chỉnh sửa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng máy bay muốn chỉnh sửa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int id = Integer.parseInt(idMayBay.getText());
@@ -450,14 +450,13 @@ public class MayBay_Panel extends javax.swing.JPanel {
             checkSelectedRow = false;
             return;
         }
-        checkSelectedRow = false;
         new MayBay_Update(this);
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         refreshInputSearch();
         if (!checkSelectedRow) {
-            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng khách hàng muốn xóa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng máy bay muốn xóa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int id = Integer.parseInt(idMayBay.getText());
@@ -469,7 +468,7 @@ public class MayBay_Panel extends javax.swing.JPanel {
             return;
         }
 
-        int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa khách hàng "
+        int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa máy bay "
                 + mayBayDTO.getTen(), "Xác nhận xóa máy bay", JOptionPane.YES_NO_OPTION);
 
         if (choice == JOptionPane.YES_NO_OPTION) {
@@ -494,11 +493,38 @@ public class MayBay_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_tableMayBayMouseClicked
 
     private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
-        // TODO add your handling code here:
+        refreshInputSearch();
+        if (!checkSelectedRow) {
+            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng máy bay muốn xem chi tiết", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        int id = Integer.parseInt(idMayBay.getText());
+        MayBayDTO mayBayDTO = mayBayBLL.findByid(id);
+        if (mayBayDTO == null) {
+            JOptionPane.showMessageDialog(null, "Không tìm thấy máy bay trong hệ thống", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            fillTable();
+            return;
+        }
+        MayBay_Detail_Dialog dialog = new MayBay_Detail_Dialog(new java.awt.Frame(), true, this);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                dialog.closeDialog(e);
+            }
+        });
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
     }//GEN-LAST:event_btnDetailActionPerformed
 
     public JTextField getIdMayBay() {
         return idMayBay;
+    }
+
+    public boolean isCheckSelectedRow() {
+        return checkSelectedRow;
+    }
+
+    public void setCheckSelectedRow(boolean checkSelectedRow) {
+        this.checkSelectedRow = checkSelectedRow;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

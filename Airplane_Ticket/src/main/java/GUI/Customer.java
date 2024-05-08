@@ -591,7 +591,6 @@ public class Customer extends javax.swing.JPanel {
             checkSelectedRow = false;
             return;
         }
-        checkSelectedRow = false;
         new Customer_Update(this);
     }
 
@@ -608,15 +607,17 @@ public class Customer extends javax.swing.JPanel {
 
     private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
         refreshInputSearch();
+        if (!checkSelectedRow) {
+            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng khách hàng muốn xem chi tiết", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         String cmndCustomer = cmnd.getText();
         KhachHangDTO khachHangDTO = khachHangBLL.findByCMND(cmndCustomer);
         if (khachHangDTO == null) {
             JOptionPane.showMessageDialog(null, "Không tìm thấy khách hàng trong hệ thống", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             fillTable();
-            checkSelectedRow = false;
             return;
         }
-        checkSelectedRow = false;
 
         Customer_Detail_Dialog dialog = new Customer_Detail_Dialog(new java.awt.Frame(), true, this);
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -639,6 +640,14 @@ public class Customer extends javax.swing.JPanel {
 
     public JTextField getCmnd() {
         return cmnd;
+    }
+
+    public boolean isCheckSelectedRow() {
+        return checkSelectedRow;
+    }
+
+    public void setCheckSelectedRow(boolean checkSelectedRow) {
+        this.checkSelectedRow = checkSelectedRow;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
