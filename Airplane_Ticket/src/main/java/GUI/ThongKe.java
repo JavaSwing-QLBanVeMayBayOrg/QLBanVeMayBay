@@ -22,8 +22,6 @@ public class ThongKe extends javax.swing.JPanel {
      * Creates new form ThongKe
      */
     private DefaultTableModel tblModel = new DefaultTableModel();
-    private TaiKhoanDTO taikhoan = new TaiKhoanDTO();
-    private Login loginFrame;
 
     public ThongKe() {
         initComponents();
@@ -31,7 +29,7 @@ public class ThongKe extends javax.swing.JPanel {
         initThongKe("admin");
         HoaDonBLL hd = new HoaDonBLL();
         veban.setText(hd.getSoluongve());
-        doanhthu.setText(hd.getDoanhthu());
+        doanhthu.setText(hd.getDoanhthu() +"VNĐ");
     }
 
     /**

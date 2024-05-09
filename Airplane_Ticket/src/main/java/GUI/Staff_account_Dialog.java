@@ -26,6 +26,8 @@ public class Staff_account_Dialog extends java.awt.Dialog {
         super(parent, modal);
         initComponents();
         tk.setText(taikhoan.getUsername());
+        System.out.println(tk.getText()+" "+mk.getText());
+        System.out.println(taikhoan.getUsername()+" "+taikhoan.getPassword());
         mk.setText(taikhoan.getPassword());
         String ngayCap = new SimpleDateFormat("yyyy-MM-dd").format(taikhoan.getNgayCap());
         ngay.setText(ngayCap);

@@ -14,12 +14,11 @@ public class TaiKhoanDTO {
     }
 
 
-    public TaiKhoanDTO(String userName, String passWord, Date ngayCap, boolean tinhTrang, String cmnd) {
-        this.username = username;
-        this.password = password;
+    public TaiKhoanDTO(String userName, String passWord, Date ngayCap, boolean tinhTrang) {
+        this.username = userName;
+        this.password = passWord;
         this.ngayCap = ngayCap;
         this.tinhTrang = tinhTrang;
-        this.cmndNhanVien = cmndNhanVien;
     }
 
     public String getUsername() {

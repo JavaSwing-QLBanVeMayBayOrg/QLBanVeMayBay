@@ -69,6 +69,7 @@ DTO\MayBayDTO.class
 GUI\Staff.class
 GUI\Customer_Update$2.class
 GUI\Arline_Ticket_Panel$7.class
+GUI\Staff_Detail_Dialog$6.class
 DAO\HangThanThietDAO.class
 GUI\SanBayDi_Dialog$5.class
 GUI\TimChuyenBay_panel$9.class
@@ -91,6 +92,7 @@ GUI\SanBay_Panel$11.class
 GUI\Ticket_Book_panel.class
 BLL\SanBayBLL.class
 GUI\Arline_Ticket_Panel$8.class
+GUI\Staff_Detail_Dialog$5.class
 GUI\Ticket_Book_panel$2.class
 DAO\TaiKhoanDAO.class
 GUI\Customer_Update$3.class
@@ -105,6 +107,7 @@ GUI\Download_Dialog$2$1.class
 GUI\ChiTietSanBay_DaXoa_Dialog$2.class
 GUI\SanBay_Panel$13.class
 DAO\SanBayDAO.class
+GUI\Staff_Detail_Dialog$4.class
 GUI\TimChuyenBay_panel.class
 GUI\Customer_Update$1.class
 GUI\ThongTinVeMayBay_Dialog$2.class

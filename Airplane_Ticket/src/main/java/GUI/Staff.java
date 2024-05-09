@@ -35,6 +35,7 @@ public class Staff extends javax.swing.JPanel {
                 if (row != -1) { // Kiểm tra xem dòng có được chọn hay không
                     NhanVienDTO nhanvien = NhanVienBLL.findByCMND(jTable1.getValueAt(row, 0).toString());
                     Staff_Detail_Dialog detail = new Staff_Detail_Dialog(new javax.swing.JFrame(), true, nhanvien);
+                    detail.setLocationRelativeTo(null);
                     detail.setVisible(true);
                 }
             }

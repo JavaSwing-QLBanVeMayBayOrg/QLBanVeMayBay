@@ -20,4 +20,10 @@ public class TaiKhoanBLL {
         return taikhoanDAO.CheckTaiKhoan(usr,password);
        
     }
+    
+    public TaiKhoanDTO findByCMND(String cmnd) throws SQLException
+    {
+        return taikhoanDAO.getbyID(cmnd);
+       
+    }
 }
