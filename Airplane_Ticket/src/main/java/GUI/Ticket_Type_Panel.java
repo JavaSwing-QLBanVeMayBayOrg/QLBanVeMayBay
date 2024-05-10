@@ -4,17 +4,48 @@
  */
 package GUI;
 
+import BLL.LoaiVeMayBayBLL;
+import DTO.KhachHangDTO;
+import DTO.KhachHangSearchDTO;
+import DTO.LoaiVeMayBayDTO;
+import Util.DateUtil;
+import Util.ParseMoneyUtil;
+
+import javax.swing.table.DefaultTableModel;
+import java.sql.SQLException;
+
 /**
  *
  * @author User
  */
 public class Ticket_Type_Panel extends javax.swing.JPanel {
-
-    /**
-     * Creates new form Ticket_Type_Panel
-     */
+    private LoaiVeMayBayBLL loaiVeMayBayBLL = new LoaiVeMayBayBLL();
+    private DefaultTableModel tblModel = new DefaultTableModel();
     public Ticket_Type_Panel() {
         initComponents();
+        initTable();
+        fillTable();
+    }
+
+    private void initTable() {
+        String[] colums = new String[]{"Mã loại vé", "Mã chuyến bay", "Hạng vé", "Giá vé",
+                "Số lượng vé tổng", "Số lượng vé còn", "Tình trạng"};
+        tblModel.setColumnIdentifiers(colums);
+        tableLoaiVe.setModel(tblModel);
+    }
+
+    private void fillTable() {
+        tblModel.setRowCount(0);
+        for (LoaiVeMayBayDTO loaiVeMayBayDTO : loaiVeMayBayBLL.findAll()) {
+            tblModel.addRow(new Object[]{loaiVeMayBayDTO.getId(), loaiVeMayBayDTO.getIdChuyenBay().getId(),
+                    loaiVeMayBayDTO.getHangVe(), ParseMoneyUtil.formatCurrency(loaiVeMayBayDTO.getGiaVe()), loaiVeMayBayDTO.getSoLuongVeTong(),
+                    loaiVeMayBayDTO.getSoLuongVeCon(), loaiVeMayBayDTO.isTinhTrang() ? "Mở bán" : "Chưa mở bán"});
+        }
+        tblModel.fireTableDataChanged();
+    }
+
+    public void loadDataTable() {
+        fillTable();
     }
 
     /**
@@ -35,17 +66,14 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
+        tableLoaiVe = new javax.swing.JTable();
+        btnCreate = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ADMIN\\Desktop\\JAVA CLASS\\GIT\\QLBanVeMayBay\\Airplane_Ticket\\src\\main\\java\\images\\ticket.png")); // NOI18N
         jLabel1.setText(" Danh sách loại vé");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -64,7 +92,7 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
 
         jButton2.setBackground(new java.awt.Color(0, 153, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableLoaiVe.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -83,22 +111,32 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
-            jTable1.getColumnModel().getColumn(5).setResizable(false);
-            jTable1.getColumnModel().getColumn(6).setResizable(false);
+        tableLoaiVe.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tableLoaiVe.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tableLoaiVe);
+        if (tableLoaiVe.getColumnModel().getColumnCount() > 0) {
+            tableLoaiVe.getColumnModel().getColumn(0).setResizable(false);
+            tableLoaiVe.getColumnModel().getColumn(1).setResizable(false);
+            tableLoaiVe.getColumnModel().getColumn(2).setResizable(false);
+            tableLoaiVe.getColumnModel().getColumn(3).setResizable(false);
+            tableLoaiVe.getColumnModel().getColumn(4).setResizable(false);
+            tableLoaiVe.getColumnModel().getColumn(5).setResizable(false);
+            tableLoaiVe.getColumnModel().getColumn(6).setResizable(false);
         }
 
-        jButton3.setBackground(new java.awt.Color(0, 153, 255));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("+ Thêm loại vé");
+        btnCreate.setBackground(new java.awt.Color(0, 153, 255));
+        btnCreate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCreate.setForeground(new java.awt.Color(255, 255, 255));
+        btnCreate.setText("+ Thêm loại vé");
+        btnCreate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    btnCreateActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
         jButton4.setBackground(new java.awt.Color(0, 153, 255));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -113,15 +151,6 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
         jRadioButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jRadioButton2.setSelected(true);
         jRadioButton2.setText("Đã mở bán");
-
-        buttonGroup2.add(jRadioButton3);
-        jRadioButton3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jRadioButton3.setSelected(true);
-        jRadioButton3.setText("Chưa bay");
-
-        buttonGroup2.add(jRadioButton4);
-        jRadioButton4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jRadioButton4.setText("Đã bay");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -148,13 +177,10 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jRadioButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -171,37 +197,42 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
                     .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(jRadioButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(jRadioButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jRadioButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(194, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {//GEN-FIRST:event_btnCreateActionPerformed
+        ChuyenBay_Add_Dialog dialog = new ChuyenBay_Add_Dialog(new java.awt.Frame(), true, this);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                dialog.closeDialog(e);
+            }
+        });
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btnCreateActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCreate;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tableLoaiVe;
     // End of variables declaration//GEN-END:variables
 }
