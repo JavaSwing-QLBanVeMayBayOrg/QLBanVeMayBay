@@ -38,6 +38,10 @@ public class MayBayBLL {
         return mayBayDAO.delete(mayBayDTO);
     }
 
+    public List<MayBayDTO> findAll() {
+        return mayBayDAO.findAll();
+    }
+
     public void validate(StringBuilder errorMessage, ThemMayBay_Dialog themMayBay_dialog) {
         String nameStr = themMayBay_dialog.getName().trim();
         String statusStr = themMayBay_dialog.getStatus().getSelectedItem().toString();

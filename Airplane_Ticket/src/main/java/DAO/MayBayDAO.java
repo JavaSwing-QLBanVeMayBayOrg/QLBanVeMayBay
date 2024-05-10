@@ -209,5 +209,27 @@ public class MayBayDAO {
         }
     }
 
+    public List<MayBayDTO> findAll() {
+        List<MayBayDTO> mayBayDTOList = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("SELECT id, ten, soGheH1, soGheH2, status FROM maybay ");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            MayBayDTO mayBayDTO;
+            while (resultSet.next()) {
+                mayBayDTO = new MayBayDTO();
+                mayBayDTO.setId(resultSet.getInt("id"));
+                mayBayDTO.setTen(resultSet.getString("ten"));
+                mayBayDTO.setSoGheH1(resultSet.getInt("soGheH1"));
+                mayBayDTO.setSoGheH2(resultSet.getInt("soGheH2"));
+                mayBayDTO.setStatus(resultSet.getBoolean("status"));
+                mayBayDTOList.add(mayBayDTO);
+            }
+            BaseDAO.closeConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mayBayDTOList;
+    }
 
 }

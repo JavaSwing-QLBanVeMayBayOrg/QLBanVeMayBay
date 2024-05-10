@@ -26,7 +26,7 @@ public class SanBayDAO {
         Connection con=BaseDAO.getConnection();
         if (con!=null) {
         try {
-        System.out.println("Kết nối thành công");
+//        System.out.println("Kết nối thành công");
         String sql = "Select * from sanbay where status=1";
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
@@ -38,7 +38,7 @@ public class SanBayDAO {
         sanbay.setStatus(rs.getBoolean("status"));
         arr.add(sanbay);
         }
-        System.out.println(arr);
+//        System.out.println(arr);
         } catch (SQLException ex) {
         System.out.println(ex);
         } finally {
@@ -51,7 +51,7 @@ public class SanBayDAO {
         Connection con=BaseDAO.getConnection();
         if (con!=null) {
             try {
-                System.out.println("Kết nối thành công");
+//                System.out.println("Kết nối thành công");
                 String sql = "Select * from sanbay";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
