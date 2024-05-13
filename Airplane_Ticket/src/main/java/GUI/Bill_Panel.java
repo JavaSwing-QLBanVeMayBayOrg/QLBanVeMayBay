@@ -4,18 +4,155 @@
  */
 package GUI;
 
+import BLL.HoaDonVeBanBLL;
+import DTO.HoaDonVeBanDTO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author User
  */
 public class Bill_Panel extends javax.swing.JPanel {
 
+      private DefaultTableModel tableModel;
+    HoaDonVeBanBLL hoaDonVeBanBLL= new HoaDonVeBanBLL();
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
     /**
      * Creates new form Bill_Panel
      */
     public Bill_Panel() {
         initComponents();
+        initTable();
+        fillTable();
+        jTextField1.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            search();
+        }
+    });
+       jButton1.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        showTicketListDialog(); // Gọi phương thức để hiển thị GUI danh sách vé đặt khi nút được nhấn
     }
+}); 
+    }
+    private void showTicketListDialog() {
+    // Tạo một đối tượng của GUI danh sách vé đặt
+    Customer_Ticket_List_Dialog ticketListDialog = new Customer_Ticket_List_Dialog(new JFrame(), true); 
+    ticketListDialog.setVisible(true); // Hiển thị GUI danh sách vé đặt
+}
+    
+    private void initTable() {
+    tableModel = new DefaultTableModel();
+    tableModel.addColumn("Mã hóa đơn");
+    tableModel.addColumn("Khách hàng");
+    tableModel.addColumn("Ngày lập");
+    tableModel.addColumn("Tổng tiền");
+    jTable1.setModel(tableModel);
+    
+    // Thêm trình nghe sự kiện cho bảng
+    jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            jTable1MouseClicked(evt);
+        }
+    });
+    
+jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+}   
+
+private void fillTable() {
+    ArrayList<HoaDonVeBanDTO> danhSachHoaDon = hoaDonVeBanBLL.getAllHoaDon();
+    for (HoaDonVeBanDTO hoadon : danhSachHoaDon) {
+        String ngayLapFormatted = hoadon.getNgayLapHoaDon().format(dateFormatter);
+        Object[] rowData = {hoadon.getId(), hoadon.getIdKhachHangLapHoaDon().getHoTen(), ngayLapFormatted, hoadon.getTongTien()};
+        tableModel.addRow(rowData);
+    }
+}
+
+    private void search() {
+    String searchField = jTextField1.getText().trim(); // Lấy dữ liệu từ JTextField
+
+    if (searchField.isEmpty()) { // Nếu không có dữ liệu nhập vào, hiển thị tất cả hóa đơn
+        fillTable(); // Hiển thị lại toàn bộ hóa đơn
+        return;
+    }
+
+    String selectedOption = jComboBox1.getSelectedItem().toString(); // Lựa chọn từ JComboBox
+    ArrayList<HoaDonVeBanDTO> resultList = new ArrayList<>(); // Danh sách kết quả tìm kiếm
+
+    if (selectedOption.equals("Mã hóa đơn")) {
+        int searchId = Integer.parseInt(searchField);
+        HoaDonVeBanDTO hoadon = hoaDonVeBanBLL.getHoaDonById(searchId);
+        if (hoadon != null) {
+            resultList.add(hoadon);
+        }
+    } else if (selectedOption.equals("Khách hàng")) {
+        // Thực hiện tìm kiếm theo tên khách hàng
+        ArrayList<HoaDonVeBanDTO> danhSachHoaDon = hoaDonVeBanBLL.getAllHoaDon();
+        for (HoaDonVeBanDTO hoadon : danhSachHoaDon) {
+            String tenKhachHang = hoadon.getIdKhachHangLapHoaDon().getHoTen();
+            if (tenKhachHang.toLowerCase().contains(searchField.toLowerCase())) {
+                resultList.add(hoadon);
+            }
+        }
+    }
+
+    // Hiển thị kết quả tìm kiếm trên bảng jTable1
+    displaySearchResult(resultList);
+}
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+    // Lấy chỉ số dòng được click
+    int selectedRow = jTable1.getSelectedRow();
+    // Kiểm tra nếu có dòng được chọn
+    if (selectedRow != -1) {
+        // Lấy thông tin hóa đơn từ dòng được chọn
+        int idHoaDon = (int) jTable1.getValueAt(selectedRow, 0);
+        // Hiển thị thông tin chi tiết hóa đơn
+        showHoaDonDetail(idHoaDon);
+    }
+}
+
+private void displaySearchResult(ArrayList<HoaDonVeBanDTO> resultList) {
+    tableModel.setRowCount(0); // Xóa toàn bộ dữ liệu trên bảng jTable1
+
+    for (HoaDonVeBanDTO hoadon : resultList) {
+        Object[] rowData = {hoadon.getId(), hoadon.getIdKhachHangLapHoaDon().getHoTen(), hoadon.getNgayLapHoaDon(), hoadon.getTongTien()};
+        tableModel.addRow(rowData); // Thêm dòng mới vào bảng jTable1
+    }
+}
+// Trong constructor của GUI, gọi phương thức search khi người dùng nhấn Enter trong JTextField
+
+private void showHoaDonDetail(int idHoaDon) {
+    // Gọi đến BLL để lấy thông tin chi tiết của hóa đơn dựa trên idHoaDon
+    HoaDonVeBanDTO hoadonDetail = hoaDonVeBanBLL.getHoaDonById(idHoaDon);
+    
+    // Hiển thị thông tin chi tiết của hóa đơn trên phần chi tiết hóa đơn trên GUI
+    if (hoadonDetail != null) {
+        String ngayLapFormatted = hoadonDetail.getNgayLapHoaDon().format(dateFormatter);
+        jLabel16.setText(ngayLapFormatted);
+        jLabel7.setText(String.valueOf(hoadonDetail.getId()));
+        jLabel9.setText(hoadonDetail.getIdNhanVien().getHo());
+        jLabel9.setText(hoadonDetail.getIdNhanVien().getTen());
+        jLabel11.setText(hoadonDetail.getIdKhachHangLapHoaDon().getHoTen());
+        jLabel14.setText(hoadonDetail.getTongTien().toString());
+    } else {
+        // Xử lý trường hợp không tìm thấy hóa đơn
+        // Ví dụ: hiển thị thông báo cho người dùng
+        System.out.println("Không tìm thấy hóa đơn!");
+    }
+}
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,17 +180,16 @@ public class Bill_Panel extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ADMIN\\Desktop\\JAVA CLASS\\GIT\\QLBanVeMayBay\\Airplane_Ticket\\src\\main\\java\\images\\bill.png")); // NOI18N
         jLabel1.setText(" Danh sách hóa đơn");
         jLabel1.setToolTipText("");
 
@@ -65,7 +201,6 @@ public class Bill_Panel extends javax.swing.JPanel {
         jLabel3.setText("Tìm kiếm :");
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTextField1.setText("jTextField1");
         jTextField1.setBorder(null);
 
         jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -138,41 +273,36 @@ public class Bill_Panel extends javax.swing.JPanel {
         jLabel5.setText("Mã hóa đơn :");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel7.setText("jLabel7");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setText("Nhân viên lập :");
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel9.setText("jLabel9");
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Khách hàng đặt :");
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel11.setText("jLabel11");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel12.setText("Chi tiết vé đặt");
-
-        jButton1.setBackground(new java.awt.Color(0, 153, 255));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Danh sách vé đặt");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel13.setText("Tổng tiền :");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel14.setText("jLabel14");
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel15.setText("Ngày lập ");
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel16.setText("31/12/2055");
+
+        jButton1.setBackground(new java.awt.Color(0, 153, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Danh Sách Vé Đặt");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -196,20 +326,21 @@ public class Bill_Panel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel15)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(2, 2, 2))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -232,10 +363,10 @@ public class Bill_Panel extends javax.swing.JPanel {
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(338, 338, 338)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(352, 352, 352)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(jLabel14))
@@ -245,11 +376,6 @@ public class Bill_Panel extends javax.swing.JPanel {
         jButton2.setBackground(new java.awt.Color(0, 153, 255));
 
         jButton3.setBackground(new java.awt.Color(0, 153, 255));
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -258,7 +384,7 @@ public class Bill_Panel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -283,10 +409,6 @@ public class Bill_Panel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

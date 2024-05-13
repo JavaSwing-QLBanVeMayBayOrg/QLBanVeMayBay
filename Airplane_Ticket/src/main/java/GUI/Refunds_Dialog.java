@@ -4,6 +4,9 @@
  */
 package GUI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 /**
  *
  * @author User
@@ -16,8 +19,18 @@ public class Refunds_Dialog extends java.awt.Dialog {
     public Refunds_Dialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        jButton1.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        closeDialog(); // Gọi phương thức để đóng cửa sổ dialog khi nút được nhấn
+    }
+});
     }
 
+    private void closeDialog() {
+    setVisible(false); // Ẩn cửa sổ dialog
+    dispose(); // Giải phóng tài nguyên của cửa sổ dialog
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -6,6 +6,7 @@ package BLL;
 
 import DAO.HoaDonVeBanDAO;
 import DTO.HoaDonVeBanDTO;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,6 +14,14 @@ import DTO.HoaDonVeBanDTO;
  */
 public class HoaDonVeBanBLL {
     HoaDonVeBanDAO hoadonvebanDAO=new HoaDonVeBanDAO();
+    public HoaDonVeBanDTO getHoaDonById(int idHoaDon) {
+    // Gọi đến DAO để lấy thông tin của hóa đơn dựa trên idHoaDon
+    return hoadonvebanDAO.getHoaDonById(idHoaDon);
+}
+
+    public ArrayList<HoaDonVeBanDTO> getAllHoaDon() {
+    return hoadonvebanDAO.getAllHoaDon();
+}
      public boolean create(HoaDonVeBanDTO hoadon) {
          return hoadonvebanDAO.create(hoadon);
      }

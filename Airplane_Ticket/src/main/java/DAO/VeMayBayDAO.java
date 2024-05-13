@@ -4,16 +4,22 @@
  */
 package DAO;
 
+import DTO.HoaDonVeBanDTO;
+import DTO.KhachHangDTO;
+import DTO.LoaiVeMayBayDTO;
 import DTO.VeMayBayDTO;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author ADMIN
  */
 public class VeMayBayDAO {
+    
     public boolean create(VeMayBayDTO vemaybay) {
         try {
             PreparedStatement preparedStatement = BaseDAO.getConnection()
@@ -41,4 +47,48 @@ public class VeMayBayDAO {
             return false;
         }
     }
+
+    // Trong class DAO VeMayBayDAO
+
+public static List<VeMayBayDTO> getListVeByHoaDonId(int idHoaDon) {
+    try {
+        // Khởi tạo danh sách vé
+        List<VeMayBayDTO> danhSachVe = new ArrayList<>();
+
+        // Thực hiện truy vấn SQL để lấy danh sách vé dựa trên mã hóa đơn và JOIN 3 bảng
+        String sql = "select vemaybay.*,hoadonveban.* " +
+                     "from hoadonveban,vemaybay " +
+                     "where hoadonveban.id=vemaybay.id and hoadonveban.id=?";
+        PreparedStatement preparedStatement = BaseDAO.getConnection().prepareStatement(sql);
+        preparedStatement.setInt(1, idHoaDon);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        // Duyệt qua các dòng kết quả và thêm vé vào danh sách
+        while (resultSet.next()) {
+            // Tạo đối tượng vé từ dữ liệu trong ResultSet
+            VeMayBayDTO ve = new VeMayBayDTO();
+            // Thiết lập thông tin cho đối tượng vé từ ResultSet
+            ve.setId(resultSet.getInt("mã vé"));
+            
+            LoaiVeMayBayDTO loaivemaybay = new LoaiVeMayBayDTO();
+            loaivemaybay.setId(resultSet.getInt("mã loại vé")); 
+            loaivemaybay.setHangVe(resultSet.getString("hạng vé"));
+            
+            KhachHangDTO khachhang = new KhachHangDTO();
+            khachhang.setCmnd(resultSet.getString("Khách Hàng")); 
+            khachhang.setHoTen(resultSet.getString("Khách Hàng"));
+            
+            // Thêm vé vào danh sách
+            danhSachVe.add(ve);
+        }
+
+        // Đóng kết nối và trả về danh sách vé
+        BaseDAO.closeConnection();
+        return danhSachVe;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
 }
