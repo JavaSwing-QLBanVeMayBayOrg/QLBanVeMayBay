@@ -429,7 +429,7 @@ public class Customer_Add_Dialog extends java.awt.Dialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_nameActionPerformed
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {
         closeDialog();
     }
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {

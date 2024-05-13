@@ -55,20 +55,25 @@ public class Ticket_Book_panel extends javax.swing.JPanel {
         vedi=frame.getPanelVeDaChon().getVedichon();
         veve=frame.getPanelVeDaChon().getVevechon();
         soLuong=frame.getTimchuyenbay().getSoLuong();
-        tongtienve =vedi.getGiaVe().multiply(BigDecimal.valueOf(soLuong));
+       
         model.setRowCount(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String ngayve;
+        BigDecimal giaVe;
+        giaVe=vedi.getGiaVe();
         if (veve==null)
         {
             ngayve="";
+             tongtienve =giaVe.multiply(BigDecimal.valueOf(soLuong));
         }
         else
         {
             ngayve=veve.getIdChuyenBay().getNgayDi().format(formatter);
+            giaVe=giaVe.add(veve.getGiaVe());
+            tongtienve=giaVe.multiply(BigDecimal.valueOf(soLuong));
         }
        
-             Object[] row={vedi.getIdChuyenBay().getMaSanBayDi().getMaSanBay()+" - "+vedi.getIdChuyenBay().getMaSanBayDen().getMaSanBay(),vedi.getIdChuyenBay().getNgayDi().format(formatter),ngayve,vedi.getHangVe(),vedi.getGiaVe(),soLuong,tongtienve};
+             Object[] row={vedi.getIdChuyenBay().getMaSanBayDi().getMaSanBay()+" - "+vedi.getIdChuyenBay().getMaSanBayDen().getMaSanBay(),vedi.getIdChuyenBay().getNgayDi().format(formatter),ngayve,vedi.getHangVe(),giaVe,soLuong,tongtienve};
                     model.addRow(row);
         
         jLabel6.setText(tongtienve.toString());

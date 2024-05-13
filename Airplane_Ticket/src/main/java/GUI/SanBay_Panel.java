@@ -161,7 +161,8 @@ public class SanBay_Panel extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setText("Danh sách sân bay");
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ADMIN\\Desktop\\JAVA CLASS\\GIT\\QLBanVeMayBay\\Airplane_Ticket\\src\\main\\java\\images\\Airfield.png")); // NOI18N
+        jLabel1.setText(" Danh sách sân bay");
 
         jButton2.setBackground(new java.awt.Color(0, 153, 255));
         jButton2.addActionListener(new java.awt.event.ActionListener() {

@@ -92,6 +92,9 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        passTF.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        passTF.setBorder(null);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
