@@ -6,6 +6,7 @@ package BLL;
 
 import DAO.VeMayBayDAO;
 import DTO.VeMayBayDTO;
+import java.util.List;
 
 /**
  *
@@ -16,4 +17,8 @@ public class VeMayBayBLL {
      public boolean create(VeMayBayDTO vemaybay) {
          return vemaybayDAO.create(vemaybay);
      }
+     public static List<VeMayBayDTO> getListVeByHoaDonId(int maHoaDon) {
+    // Gọi phương thức từ DAO để lấy danh sách vé dựa trên mã hóa đơn
+    return VeMayBayDAO.getListVeByHoaDonId(maHoaDon);
+}
 }

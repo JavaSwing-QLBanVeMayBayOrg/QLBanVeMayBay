@@ -4,20 +4,89 @@
  */
 package GUI;
 
+import BLL.VeMayBayBLL;
+import DTO.VeMayBayDTO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author User
  */
 public class Customer_Ticket_List_Dialog extends java.awt.Dialog {
 
+    // Tạo một biến instance để lưu trữ tên khách hàng
+private String tenKhachHang;
     /**
      * Creates new form Customer_Ticket_List_Dialog
      */
     public Customer_Ticket_List_Dialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-    }
+        // Thiết lập tên khách hàng
+jLabel3.setText(tenKhachHang);
 
+        jButton2.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        showRefundsDialog(); // Gọi phương thức khi nút được nhấn
+    }
+});
+        jButton1.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        closeDialog(); // Gọi phương thức để đóng cửa sổ dialog khi nút được nhấn
+    }
+});
+    }
+    // Phương thức để thiết lập tên khách hàng
+public void setTenKhachHang(String ten) {
+    this.tenKhachHang = ten;
+    jLabel3.setText(ten); // Hiển thị tên khách hàng lên label jLabel3
+}
+
+// Phương thức để cập nhật bảng vé đặt dựa trên danh sách vé được truyền vào
+public void updateTicketTable(List<VeMayBayDTO> danhSachVe) {
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    model.setRowCount(0); // Xóa hết các dòng trong bảng
+    for (VeMayBayDTO ve : danhSachVe) {
+        model.addRow(new Object[]{
+            ve.getId(), // Mã vé
+            ve.getIdLoaiVeMayBay().getId(), // Mã loại vé
+            ve.getIdKhachHang().getHoTen(), // Tên khách hàng
+            ve.getIdLoaiVeMayBay().getHangVe(), // Hạng vé
+        });
+    }
+}
+// Phương thức để hiển thị thông tin vé dựa trên mã hóa đơn
+public void showTicketInformation(int maHoaDon) {
+    // Xóa tất cả các dòng trong bảng trước khi thêm dữ liệu mới
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    model.setRowCount(0);
+
+    // Gọi hàm trong BLL để lấy danh sách vé dựa trên mã hóa đơn
+    List<VeMayBayDTO> danhSachVe = VeMayBayBLL.getListVeByHoaDonId(maHoaDon);
+
+    // Nếu danh sách vé không rỗng, hiển thị thông tin lên bảng
+    if (danhSachVe != null && !danhSachVe.isEmpty()) {
+        updateTicketTable(danhSachVe);
+    } else {
+        JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin vé cho mã hóa đơn này", "Thông báo", JOptionPane.WARNING_MESSAGE);
+    }
+}
+    private void showRefundsDialog() {
+    Refunds_Dialog dialog = new Refunds_Dialog(new JFrame(), true); // Tạo một đối tượng của cửa sổ dialog
+    dialog.setVisible(true); // Hiển thị cửa sổ dialog
+}
+
+    private void closeDialog() {
+    setVisible(false); // Ẩn cửa sổ dialog
+    dispose(); // Giải phóng tài nguyên của cửa sổ dialog
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,7 +121,6 @@ public class Customer_Ticket_List_Dialog extends java.awt.Dialog {
         jLabel2.setText("Khách hàng đặt :");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel3.setText("jLabel3");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel4.setText("Danh sách vé đặt :");
@@ -175,9 +243,11 @@ public class Customer_Ticket_List_Dialog extends java.awt.Dialog {
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 Customer_Ticket_List_Dialog dialog = new Customer_Ticket_List_Dialog(new java.awt.Frame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
                     }
