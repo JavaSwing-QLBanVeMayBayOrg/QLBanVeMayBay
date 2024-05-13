@@ -181,7 +181,7 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         timePicker3.setDisplayText(thoiGianBay);
 
         timePicker1.setDisplayText(thoiGianDi);
-
+        setTitle("Thêm chuyến bay");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
