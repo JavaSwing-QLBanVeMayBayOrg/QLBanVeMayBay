@@ -72,4 +72,25 @@ public class LoaiVeMayBayDAO {
         }
         return loaiVeMayBayDTOList;
     }
+
+    public boolean create(LoaiVeMayBayDTO loaiVeMayBayDTO, int idChuyenBay) {
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("INSERT INTO loaivemaybay(idChuyenBay, hangVe, giaVe, soLuongVeTong, soLuongVeCon, tinhTrang) " +
+                            "VALUES (?, ?, ?, ?, ?, ?) ");
+
+            preparedStatement.setInt(1, idChuyenBay);
+            preparedStatement.setString(2, loaiVeMayBayDTO.getHangVe());
+            preparedStatement.setBigDecimal(3, loaiVeMayBayDTO.getGiaVe());
+            preparedStatement.setInt(4, loaiVeMayBayDTO.getSoLuongVeTong());
+            preparedStatement.setInt(5, loaiVeMayBayDTO.getSoLuongVeCon());
+            preparedStatement.setBoolean(6, loaiVeMayBayDTO.isTinhTrang());
+            boolean success = preparedStatement.executeUpdate() > 0;
+            BaseDAO.closeConnection();
+            return success;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

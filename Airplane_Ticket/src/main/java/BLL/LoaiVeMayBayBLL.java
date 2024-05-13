@@ -11,4 +11,8 @@ public class LoaiVeMayBayBLL {
     public List<LoaiVeMayBayDTO> findAll() {
         return loaiVeMayBayDAO.findAll();
     }
+
+    public boolean create(LoaiVeMayBayDTO loaiVeMayBayDTO, int idChuyenBay) {
+        return loaiVeMayBayDAO.create(loaiVeMayBayDTO, idChuyenBay);
+    }
 }
