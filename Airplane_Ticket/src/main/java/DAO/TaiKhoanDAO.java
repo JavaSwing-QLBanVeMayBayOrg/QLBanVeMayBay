@@ -72,12 +72,14 @@ public class TaiKhoanDAO {
                     String passWord = resultSet.getString("passWord");
                     Date ngayCap = resultSet.getDate("ngayCap");
                     boolean tinhTrang = resultSet.getBoolean("tinhTrang");
-
-                    taiKhoan = new TaiKhoanDTO(userName, passWord, ngayCap, tinhTrang, cmnd);
+                    
+                    taiKhoan = new TaiKhoanDTO(userName, passWord, ngayCap, tinhTrang);
+                    System.out.println(userName + " " +passWord);
+                    System.out.println(taiKhoan.getUsername() + " " +taiKhoan.getPassword());
                 }
             }
+            BaseDAO.closeConnection();
         } catch (SQLException ex) {
-            // Xử lý ngoại lệ nếu có
             ex.printStackTrace();
         }
 

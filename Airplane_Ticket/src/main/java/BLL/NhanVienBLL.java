@@ -33,10 +33,9 @@ public class NhanVienBLL {
         List<NhanVienDTO> nhanvienlist = nhanvienDAO.getAllDB();
         for (NhanVienDTO nhanvien : nhanvienlist) {
             if (nhanvien.getCmnd().equals(cmnd)) {
-                return nhanvien; // Trả về nhân viên đầu tiên có CMND trùng khớp
+                return nhanvien;
             }
         }
-        // Nếu không tìm thấy nhân viên nào có CMND trùng khớp, trả về null
         return null;
     }
     

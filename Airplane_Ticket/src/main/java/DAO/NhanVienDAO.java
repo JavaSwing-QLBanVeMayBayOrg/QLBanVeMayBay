@@ -47,35 +47,28 @@ public class NhanVienDAO {
 
     public void insertone(NhanVienDTO nhanvien) {
         try {
-            // Tạo câu lệnh SQL insert dữ liệu vào bảng nhanvien
             String sql = "INSERT INTO nhanvien (cmnd, soDienThoai, ho, ten, ngaySinh, gioiTinh, tinhTrang) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            // Lấy kết nối tới cơ sở dữ liệu
             Connection connection = BaseDAO.getConnection();
 
-            // Tạo PreparedStatement với câu lệnh SQL insert
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            // Thiết lập giá trị cho các tham số trong câu lệnh SQL insert từ đối tượng NhanVienDTO
             preparedStatement.setString(1, nhanvien.getCmnd());
             preparedStatement.setString(2, nhanvien.getSoDienThoai());
             preparedStatement.setString(3, nhanvien.getHo());
             preparedStatement.setString(4, nhanvien.getTen());
             preparedStatement.setDate(5, nhanvien.getNgaySinh());
-            preparedStatement.setBoolean(6, nhanvien.isGioiTinh());
+            preparedStatement.setByte(6, nhanvien.isGioiTinh() ? (byte) 1 : (byte)0);
             preparedStatement.setBoolean(7, true);
 
-            // Thực thi câu lệnh insert
             int rowsInserted = preparedStatement.executeUpdate();
-
-            // Đóng kết nối
-            BaseDAO.closeConnection();
-
             if (rowsInserted > 0) {
                 System.out.println("Dữ liệu đã được chèn thành công vào bảng nhanvien!");
                 AddTK(nhanvien.getCmnd());
 
             }
+            BaseDAO.closeConnection();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -83,17 +76,14 @@ public class NhanVienDAO {
 
     public void AddTK(String cmnd) {
         try {
-            // Tạo câu lệnh SQL insert dữ liệu vào bảng nhanvien
+
             String sql = "INSERT INTO taikhoan (userName, passWord, ngayCap, tinhTrang, cmndNhanVien) VALUES (?, ?, ?, ?, ?)";
 
-            // Lấy kết nối tới cơ sở dữ liệu
             Connection connection = BaseDAO.getConnection();
 
-            // Tạo PreparedStatement với câu lệnh SQL insert
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            // Thiết lập giá trị cho các tham số trong câu lệnh SQL insert từ đối tượng NhanVienDTO
-            java.util.Date currentDate = new java.util.Date(); // Sử dụng constructor hiện tại của java.util.Date
+            java.util.Date currentDate = new java.util.Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDate = dateFormat.format(currentDate);
             preparedStatement.setString(1, cmnd);
@@ -103,10 +93,8 @@ public class NhanVienDAO {
             preparedStatement.setByte(4, (byte) 1);
             preparedStatement.setString(5, cmnd);
 
-            // Thực thi câu lệnh insert
             int rowsInserted = preparedStatement.executeUpdate();
 
-            // Đóng kết nối
             BaseDAO.closeConnection();
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
@@ -115,6 +103,7 @@ public class NhanVienDAO {
 
     public List<NhanVienDTO> getAllDB() {
         try {
+            Connection connection = BaseDAO.getConnection();
             PreparedStatement preparedStatement = BaseDAO.getConnection()
                     .prepareStatement("SELECT * FROM nhanvien");
 
@@ -132,6 +121,7 @@ public class NhanVienDAO {
                 nhanvienList.add(nhanvien);
             }
             BaseDAO.closeConnection();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -139,38 +129,40 @@ public class NhanVienDAO {
     }
 
     public void updateTT(String cmnd, String tt) throws SQLException {
-        PreparedStatement preparedStatement = BaseDAO.getConnection()
-                .prepareStatement("UPDATE taikhoan SET tinhTrang = ? WHERE cmndNhanVien = ?");
-        switch(tt) {
+        Connection connection = BaseDAO.getConnection();
+        String sql = "UPDATE taikhoan SET tinhTrang = ? WHERE cmndNhanVien = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
         
-        case "del":
-            preparedStatement.setByte(1, (byte) 0);
-        case "add":
-            preparedStatement.setByte(1, (byte) 1);
-        
+        switch (tt) {
+            case "del":
+                preparedStatement.setByte(1, (byte) 0);
+                System.out.println("0");
+                break;
+            case "add":
+                preparedStatement.setByte(1, (byte) 1);
+                System.out.println("1");
+                break;
         }
-        
         preparedStatement.setString(2, cmnd);
+        System.out.println(sql);
         int rowsAffected = preparedStatement.executeUpdate();
         if (rowsAffected > 0) {
             System.out.print("da cap nhat");
         }
-
+        BaseDAO.closeConnection();
     }
 
     public void update(NhanVienDTO nhanvien, String manv) throws SQLException {
-        // Tạo PreparedStatement với câu lệnh SQL insert
         String sql = "UPDATE nhanvien SET cmnd= ?,soDienThoai=?,ho=?,ten=?,ngaySinh=?,gioiTinh=? WHERE cmnd = ?";
         Connection connection = BaseDAO.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        // Thiết lập giá trị cho các tham số trong câu lệnh SQL insert từ đối tượng NhanVienDTO
         preparedStatement.setString(1, nhanvien.getCmnd());
         preparedStatement.setString(2, nhanvien.getSoDienThoai());
         preparedStatement.setString(3, nhanvien.getHo());
         preparedStatement.setString(4, nhanvien.getTen());
         preparedStatement.setDate(5, nhanvien.getNgaySinh());
-        preparedStatement.setBoolean(6, nhanvien.isGioiTinh());
+        preparedStatement.setByte(6, nhanvien.isGioiTinh() ? (byte)1 : (byte)0);
         preparedStatement.setString(7, manv);
 
         int rowsAffected = preparedStatement.executeUpdate();
@@ -178,7 +170,6 @@ public class NhanVienDAO {
             System.out.print("da cap nhat");
         }
 
-        // Đóng kết nối
         BaseDAO.closeConnection();
 
     }
@@ -213,7 +204,6 @@ public class NhanVienDAO {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Duyệt qua kết quả và thêm vào danh sách nhanVienList
             while (resultSet.next()) {
                 NhanVienDTO nhanvien = new NhanVienDTO();
                 nhanvien.setCmnd(resultSet.getString("cmnd"));
@@ -222,6 +212,7 @@ public class NhanVienDAO {
                 nhanvien.setSoDienThoai(resultSet.getString("soDienThoai"));
                 nhanVienList.add(nhanvien);
             }
+            BaseDAO.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -230,21 +221,22 @@ public class NhanVienDAO {
 
     public NhanVienDTO getCMND(String user) throws SQLException {
         Connection connection = BaseDAO.getConnection();
-            PreparedStatement preparedStatement = null;
 
-            String sql = "SELECT nhanvien.cmnd FROM taikhoan INNER JOIN nhanvien ON taikhoan.cmndNhanVien = nhanvien.cmnd WHERE taikhoan.userName = '?'";
-            preparedStatement.setString(1, user);
-            ResultSet resultSet = preparedStatement.executeQuery();
-        NhanVienDTO nhanVien = new NhanVienDTO();    
+        String sql = "SELECT * FROM taikhoan INNER JOIN nhanvien ON taikhoan.cmndNhanVien = nhanvien.cmnd WHERE taikhoan.userName = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, user);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        NhanVienDTO nhanVien = new NhanVienDTO();
         while (resultSet.next()) {
-            
-                NhanVienDTO nhanvien = new NhanVienDTO();
-                nhanvien.setCmnd(resultSet.getString("cmnd"));
-                nhanvien.setHo(resultSet.getString("ho"));
-                nhanvien.setTen(resultSet.getString("ten"));
-                nhanvien.setSoDienThoai(resultSet.getString("soDienThoai"));
-                nhanVien=nhanvien;
+
+            NhanVienDTO nhanvien = new NhanVienDTO();
+            nhanvien.setCmnd(resultSet.getString("cmnd"));
+            nhanvien.setHo(resultSet.getString("ho"));
+            nhanvien.setTen(resultSet.getString("ten"));
+            nhanvien.setSoDienThoai(resultSet.getString("soDienThoai"));
+            nhanVien = nhanvien;
         }
+        BaseDAO.closeConnection();
         return nhanVien;
     }
 
