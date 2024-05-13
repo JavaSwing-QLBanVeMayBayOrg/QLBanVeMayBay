@@ -467,17 +467,30 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         chuyenBayDTO.setGhiChu(ghiChu.getText());
         chuyenBayDTO.setTinhTrang(Boolean.parseBoolean(cbxTinhTrangMap.get(tinhTrang.getSelectedItem().toString())));
 
-        boolean isDone = chuyenBayBLL.create(chuyenBayDTO, Integer.parseInt(cbxMaMayBayMap.get(cbxMaMayBay.getSelectedItem().toString())),
-                cbxSanBayDiMap.get(cbxMaSanBayDi.getSelectedItem().toString()), cbxSanBayDenMap.get(cbxMaSanBayDen.getSelectedItem().toString()));
-        closeDialog(null);
-        if (isDone) {
-            ticket_type_panel.loadDataTable();
-            JOptionPane.showMessageDialog(null, "Thêm mới thành công chuyến bay, bây giờ mời bạn hãy tiếp tục thêm loại vé!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Thêm mới thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-        ticket_type_panel.loadDataTable();
+        int choice = JOptionPane.showConfirmDialog(this,
+                "          Bạn có chắc chắn muốn thêm chuyến bay này\nHành động này sẽ lưu dữ liệu chuyến bay trực tiếp vào hệ thống",
+                "Xác nhận thêm chuyến bay", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
+        if (choice == JOptionPane.YES_NO_OPTION) {
+            boolean isDone = chuyenBayBLL.create(chuyenBayDTO, Integer.parseInt(cbxMaMayBayMap.get(cbxMaMayBay.getSelectedItem().toString())),
+                    cbxSanBayDiMap.get(cbxMaSanBayDi.getSelectedItem().toString()), cbxSanBayDenMap.get(cbxMaSanBayDen.getSelectedItem().toString()));
+            if (isDone) {
+                ticket_type_panel.loadDataTable();
+                JOptionPane.showMessageDialog(null, "     Thêm mới chuyến bay thành công!\nBây giờ bạn hãy tiếp tục thêm loại vé!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                closeDialog(null);
+
+                Ticket_Type_Add_Dialog dialog = new Ticket_Type_Add_Dialog(new java.awt.Frame(), true, ticket_type_panel);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        dialog.closeDialog(null);
+                    }
+                });
+
+                dialog.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Thêm mới thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnContinueActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
@@ -495,7 +508,16 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
     }//GEN-LAST:event_btnShowTime3ActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-
+        cbxMaMayBay.setSelectedIndex(0);
+        cbxMaSanBayDi.setSelectedIndex(0);
+        cbxMaSanBayDen.setSelectedIndex(0);
+        tinhTrang.setSelectedIndex(0);
+        ngayDi.setDate(null);
+        ngayDen.setDate(null);
+        thoiGianDi.setText("");
+        thoiGianDen.setText("");
+        thoiGianBay.setText("");
+        ghiChu.setText("");
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void thoiGianDiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thoiGianDiActionPerformed

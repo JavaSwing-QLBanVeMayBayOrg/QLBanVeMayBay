@@ -12,6 +12,10 @@ public class ChuyenBayBLL {
         return chuyenBayDAO.findAll();
     }
 
+    public ChuyenBayDTO findLastChuyenBay() {
+        return chuyenBayDAO.findLastChuyenBay();
+    }
+
     public boolean create(ChuyenBayDTO chuyenBayDTO, int idMayBay, String maSanBayDi, String maSanBayDen) {
         return chuyenBayDAO.create(chuyenBayDTO, idMayBay, maSanBayDi, maSanBayDen);
     }

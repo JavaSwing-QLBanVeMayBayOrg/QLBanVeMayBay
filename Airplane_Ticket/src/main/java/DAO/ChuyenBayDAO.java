@@ -83,4 +83,49 @@ public class ChuyenBayDAO {
             return false;
         }
     }
+
+    public ChuyenBayDTO findLastChuyenBay() {
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("SELECT c.id idCB, c.idMayBay, c.maSanBayDi, c.maSanBayDen, c.ngayDi, c.ngayDen, c.thoiGianBay, c.ghiChu, c.tinhTrang, " +
+                            "s.maSanBay, s.ten tenSB, s.status statusSB, " +
+                            "m.id idMB, m.ten tenMB, m.soGheH1, m.soGheH2, m.status statusMB " +
+                            "FROM chuyenbay c " +
+                            "INNER JOIN sanbay s ON c.maSanBayDi = s.maSanBay " +
+                            "INNER JOIN maybay m ON c.idMayBay = m.id\n" +
+                            "ORDER BY idCB DESC LIMIT 1 ");
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ChuyenBayDTO chuyenBayDTO;
+            SanBayDTO sanBayDTO;
+            MayBayDTO mayBayDTO;
+            if (resultSet.next()) {
+                sanBayDTO = new SanBayDTO();
+                sanBayDTO.setMaSanBay(resultSet.getString("maSanBay"));
+                sanBayDTO.setTen(resultSet.getString("tenSB"));
+                sanBayDTO.setStatus(resultSet.getBoolean("statusSB"));
+                mayBayDTO = new MayBayDTO();
+                mayBayDTO.setId(resultSet.getInt("idMB"));
+                mayBayDTO.setTen(resultSet.getString("tenMB"));
+                mayBayDTO.setSoGheH1(resultSet.getInt("soGheH1"));
+                mayBayDTO.setSoGheH2(resultSet.getInt("soGheH2"));
+                mayBayDTO.setStatus(resultSet.getBoolean("statusMB"));
+                chuyenBayDTO = new ChuyenBayDTO();
+                chuyenBayDTO.setId(resultSet.getInt("idCB"));
+                chuyenBayDTO.setIdMayBay(mayBayDTO);
+                chuyenBayDTO.setMaSanBayDi(sanBayDTO);
+                chuyenBayDTO.setMaSanBayDen(sanBayDTO);
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                chuyenBayDTO.setNgayDi(LocalDateTime.parse(resultSet.getString("ngayDi"), dateFormatter));
+                chuyenBayDTO.setNgayDen(LocalDateTime.parse(resultSet.getString("ngayDen"), dateFormatter));
+                chuyenBayDTO.setThoiGianBay(LocalTime.parse(resultSet.getString("thoiGianBay"), DateTimeFormatter.ofPattern("HH:mm:ss")));
+                chuyenBayDTO.setGhiChu(resultSet.getString("ghiChu"));
+                chuyenBayDTO.setTinhTrang(resultSet.getBoolean("tinhTrang"));
+                return chuyenBayDTO;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
