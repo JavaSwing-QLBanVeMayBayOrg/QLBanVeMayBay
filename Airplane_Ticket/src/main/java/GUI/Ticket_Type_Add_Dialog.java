@@ -224,6 +224,13 @@ public class Ticket_Type_Add_Dialog extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        StringBuilder errorMessages = new StringBuilder();
+        loaiVeMayBayBLL.validate(errorMessages, this);
+        if (!errorMessages.isEmpty()) {
+            JOptionPane.showMessageDialog(null, errorMessages, "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         LoaiVeMayBayDTO loaiVeMayBayDTO = new LoaiVeMayBayDTO();
         loaiVeMayBayDTO.setHangVe(String.valueOf(cbxHangVe.getSelectedItem()));
         loaiVeMayBayDTO.setGiaVe(new BigDecimal(giaVe.getText()));
@@ -270,6 +277,17 @@ public class Ticket_Type_Add_Dialog extends java.awt.Dialog {
         });
     }
 
+    public JComboBox<String> getCbxHangVe() {
+        return cbxHangVe;
+    }
+
+    public JTextField getGiaVe() {
+        return giaVe;
+    }
+
+    public JComboBox<String> getTinhTrang() {
+        return tinhTrang;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
