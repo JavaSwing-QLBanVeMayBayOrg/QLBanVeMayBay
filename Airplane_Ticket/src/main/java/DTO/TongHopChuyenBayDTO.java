@@ -13,12 +13,22 @@ public class TongHopChuyenBayDTO {
     private String NoiDi;
     private String NoiDen;
     private int Soluongve;
+    private double doanhThu;
 
-    public TongHopChuyenBayDTO(String ID, String NoiDi, String NoiDen, int Soluongve) {
+    public TongHopChuyenBayDTO(String ID, String NoiDi, String NoiDen, int Soluongve,double doanhThu) {
         this.ID = ID;
         this.NoiDi = NoiDi;
         this.NoiDen = NoiDen;
         this.Soluongve = Soluongve;
+        this.doanhThu = doanhThu;
+    }
+
+    public double getDoanhThu() {
+        return doanhThu;
+    }
+
+    public void setDoanhThu(double doanhThu) {
+        this.doanhThu = doanhThu;
     }
 
     public String getID() {

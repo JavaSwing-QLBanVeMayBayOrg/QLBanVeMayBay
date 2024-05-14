@@ -4,8 +4,9 @@
  */
 package DAO;
 
-import DTO.HangThanThietDTO;
 import DTO.NhanVienDTO;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.util.List;
@@ -15,6 +16,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -48,19 +53,15 @@ public class NhanVienDAO {
     public void insertone(NhanVienDTO nhanvien) {
         try {
             String sql = "INSERT INTO nhanvien (cmnd, soDienThoai, ho, ten, ngaySinh, gioiTinh, tinhTrang) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
             Connection connection = BaseDAO.getConnection();
-
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
             preparedStatement.setString(1, nhanvien.getCmnd());
             preparedStatement.setString(2, nhanvien.getSoDienThoai());
             preparedStatement.setString(3, nhanvien.getHo());
             preparedStatement.setString(4, nhanvien.getTen());
             preparedStatement.setDate(5, nhanvien.getNgaySinh());
-            preparedStatement.setByte(6, nhanvien.isGioiTinh() ? (byte) 1 : (byte)0);
+            preparedStatement.setByte(6, nhanvien.isGioiTinh() ? (byte) 1 : (byte) 0);
             preparedStatement.setBoolean(7, true);
-
             int rowsInserted = preparedStatement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("Dữ liệu đã được chèn thành công vào bảng nhanvien!");
@@ -68,7 +69,41 @@ public class NhanVienDAO {
 
             }
             BaseDAO.closeConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void insertmany(List<NhanVienDTO> Nhanvien) {
+        try {
+            String sql = "INSERT INTO nhanvien (cmnd, soDienThoai, ho, ten, ngaySinh, gioiTinh, tinhTrang) VALUES ";
+            String sql2 = "";
+            Connection connection = BaseDAO.getConnection();
+            for (int i = 0; i < Nhanvien.size(); i++) {
+                NhanVienDTO nv = Nhanvien.get(i);
+                sql += "('" + nv.getCmnd() + "', ";
+                sql += "'" + nv.getSoDienThoai() + "', ";
+                sql += "'" + nv.getHo() + "', ";
+                sql += "'" + nv.getTen() + "', ";
+                sql += "'" + nv.getNgaySinh() + "', ";
+                sql += (nv.isGioiTinh() ? 1 : 0) + ", ";
+                sql += (nv.isTinhTrang() ? 1 : 0) + ")";
+                if (i < Nhanvien.size() - 1) {
+                    sql += ",\n";
+                } else {
+                    sql += "; ";
+                }
+            }
+            System.out.println(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            int rowsInserted = preparedStatement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Dữ liệu đã được chèn thành công vào bảng nhanvien!");
+                BaseDAO.closeConnection();
+                for (NhanVienDTO nv : Nhanvien) {
+                    AddTK(nv.getCmnd());
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -76,13 +111,9 @@ public class NhanVienDAO {
 
     public void AddTK(String cmnd) {
         try {
-
             String sql = "INSERT INTO taikhoan (userName, passWord, ngayCap, tinhTrang, cmndNhanVien) VALUES (?, ?, ?, ?, ?)";
-
             Connection connection = BaseDAO.getConnection();
-
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
             java.util.Date currentDate = new java.util.Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDate = dateFormat.format(currentDate);
@@ -92,9 +123,7 @@ public class NhanVienDAO {
             preparedStatement.setDate(3, new java.sql.Date(utilDate.getTime()));
             preparedStatement.setByte(4, (byte) 1);
             preparedStatement.setString(5, cmnd);
-
             int rowsInserted = preparedStatement.executeUpdate();
-
             BaseDAO.closeConnection();
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
@@ -118,6 +147,8 @@ public class NhanVienDAO {
                 java.sql.Date sqlDate = resultSet.getDate("ngaySinh");
                 java.util.Date parsedDate = new java.util.Date(sqlDate.getTime());
                 nhanvien.setNgaySinh(new Date(parsedDate.getTime()));
+                nhanvien.setGioiTinh(resultSet.getByte("gioiTinh") != 0);
+                nhanvien.setTinhTrang(resultSet.getByte("tinhTrang") != 0);
                 nhanvienList.add(nhanvien);
             }
             BaseDAO.closeConnection();
@@ -132,7 +163,7 @@ public class NhanVienDAO {
         Connection connection = BaseDAO.getConnection();
         String sql = "UPDATE taikhoan SET tinhTrang = ? WHERE cmndNhanVien = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        
+
         switch (tt) {
             case "del":
                 preparedStatement.setByte(1, (byte) 0);
@@ -162,7 +193,7 @@ public class NhanVienDAO {
         preparedStatement.setString(3, nhanvien.getHo());
         preparedStatement.setString(4, nhanvien.getTen());
         preparedStatement.setDate(5, nhanvien.getNgaySinh());
-        preparedStatement.setByte(6, nhanvien.isGioiTinh() ? (byte)1 : (byte)0);
+        preparedStatement.setByte(6, nhanvien.isGioiTinh() ? (byte) 1 : (byte) 0);
         preparedStatement.setString(7, manv);
 
         int rowsAffected = preparedStatement.executeUpdate();
@@ -240,4 +271,47 @@ public class NhanVienDAO {
         return nhanVien;
     }
 
+    public void exportfile(String path) {
+        List<NhanVienDTO> nv = this.getAllDB();
+        String filePath = "C:\\Users\\HP\\Desktop\\testexportNV.xlsx";
+        if (path.equals("")) {
+            filePath = path;
+        }
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("NhanVien");
+
+            // Tạo header cho bảng
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("CMND");
+            headerRow.createCell(1).setCellValue("Số Điện Thoại");
+            headerRow.createCell(2).setCellValue("Họ");
+            headerRow.createCell(3).setCellValue("Tên");
+            headerRow.createCell(4).setCellValue("Ngày Sinh");
+            headerRow.createCell(5).setCellValue("Giới Tính");
+            headerRow.createCell(6).setCellValue("Tình Trạng");
+
+            // Đổ dữ liệu từ danh sách vào bảng
+            int rowNum = 1;
+            for (NhanVienDTO nhanVien : nv) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(nhanVien.getCmnd());
+                row.createCell(1).setCellValue(nhanVien.getSoDienThoai());
+                row.createCell(2).setCellValue(nhanVien.getHo());
+                row.createCell(3).setCellValue(nhanVien.getTen());
+                row.createCell(4).setCellValue(nhanVien.getNgaySinh().toString());
+                row.createCell(5).setCellValue(nhanVien.isGioiTinh() ? "Nam" : "Nữ");
+                row.createCell(6).setCellValue(nhanVien.isTinhTrang() ? "Hoạt động" : "Không hoạt động");
+            }
+
+            // Tạo và ghi ra file Excel
+            try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+                workbook.write(outputStream);
+            }
+
+            System.out.println("Xuất dữ liệu thành công ra file Excel!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

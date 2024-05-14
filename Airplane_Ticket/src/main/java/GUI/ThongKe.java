@@ -22,14 +22,27 @@ public class ThongKe extends javax.swing.JPanel {
      * Creates new form ThongKe
      */
     private DefaultTableModel tblModel = new DefaultTableModel();
+    private String year = null;
+    private String month = null;
 
     public ThongKe() {
         initComponents();
         inittbl();
-        initThongKe("admin");
+        initThongKe(year, month);
         HoaDonBLL hd = new HoaDonBLL();
-        veban.setText(hd.getSoluongve());
-        doanhthu.setText(hd.getDoanhthu() +"VNĐ");
+        veban.setText(hd.getSoluongve(year, month));
+        doanhthu.setText(hd.getDoanhthu(year, month) + "VNĐ");
+        thang.setVisible(false);
+        time.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timeActionPerformed(evt);
+            }
+        });
+        thang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                thangActionPerformed(evt);
+            }
+        });
     }
 
     /**
@@ -51,11 +64,11 @@ public class ThongKe extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        time = new javax.swing.JComboBox<>();
+        thang = new javax.swing.JComboBox<>();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ADMIN\\Desktop\\JAVA CLASS\\GIT\\QLBanVeMayBay\\Airplane_Ticket\\src\\main\\java\\images\\bar-chart.png")); // NOI18N
         jLabel1.setText(" Thống kê");
         jLabel1.setToolTipText("");
 
@@ -152,15 +165,18 @@ public class ThongKe extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Tìm kiếm :");
 
-        jComboBox2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả" }));
+        time.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        time.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Tháng", "Năm" }));
+
+        thang.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        thang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất Cả", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -173,8 +189,10 @@ public class ThongKe extends javax.swing.JPanel {
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(thang, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -187,10 +205,11 @@ public class ThongKe extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(thang, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -203,7 +222,6 @@ public class ThongKe extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel doanhthu;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel9;
@@ -212,26 +230,56 @@ public class ThongKe extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable table;
+    private javax.swing.JComboBox<String> thang;
+    private javax.swing.JComboBox<String> time;
     private javax.swing.JLabel veban;
     // End of variables declaration//GEN-END:variables
 
     private void inittbl() {
-        String[] colums = new String[]{"ID chuyến bay", "Nơi đi", "Nơi đến", "Số lượng vé"};
+        String[] colums = new String[]{"ID chuyến bay", "Nơi đi", "Nơi đến", "Số lượng vé", "Doanh Thu"};
         tblModel.setColumnIdentifiers(colums);
         table.setModel(tblModel);
     }
-    
-    private void initThongKe(String username) {
+
+    private void initThongKe(String year, String month) {
         tblModel.setRowCount(0);
         HoaDonBLL hoaDonBLL = new HoaDonBLL();
-        List<TongHopChuyenBayDTO> hoadonlist = hoaDonBLL.findAll("admin");
+        List<TongHopChuyenBayDTO> hoadonlist = hoaDonBLL.findAll(year, month);
 
         for (TongHopChuyenBayDTO hoadon : hoadonlist) {
-            tblModel.addRow(new Object[]{hoadon.getID(), hoadon.getNoiDi(), hoadon.getNoiDen(), hoadon.getSoluongve() });
+            tblModel.addRow(new Object[]{hoadon.getID(), hoadon.getNoiDi(), hoadon.getNoiDen(), hoadon.getSoluongve(), hoadon.getDoanhThu()});
         }
-        // Cập nhật lại bảng
         tblModel.fireTableDataChanged();
-        
+
+    }
+
+    private void timeActionPerformed(java.awt.event.ActionEvent evt) {
+        String selectedTime = time.getSelectedItem().toString();
+        if (selectedTime.equals("Tất cả")) {
+            year = null;
+            month = null;
+            thang.setVisible(false);
+        } else {
+            thang.setVisible(true);
+            thang.setSelectedIndex(0);
+        }
+        initThongKe(year, month);
+        HoaDonBLL hd = new HoaDonBLL();
+        veban.setText(hd.getSoluongve(year, month));
+        doanhthu.setText(hd.getDoanhthu(year, month) + "VNĐ");
+    }
+
+    private void thangActionPerformed(java.awt.event.ActionEvent evt) {
+        String selectedMonth = thang.getSelectedItem().toString();
+        if (!selectedMonth.equals("Tất Cả")) {
+            month = selectedMonth;
+        } else {
+            month = null;
+        }
+        initThongKe(year, month);
+        HoaDonBLL hd = new HoaDonBLL();
+        veban.setText(hd.getSoluongve(year, month));
+        doanhthu.setText(hd.getDoanhthu(year, month) + "VNĐ");
     }
 
 }
