@@ -2,8 +2,6 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.DialogFormInfo">
   <NonVisualComponents>
-    <Component class="org.jdesktop.animation.timing.TimingTargetAdapter" name="timingTargetAdapter1">
-    </Component>
     <Component class="com.raven.swing.TimePicker" name="timePicker2">
       <Properties>
         <Property name="displayText" type="javax.swing.JTextField" editor="org.netbeans.modules.form.ComponentChooserEditor">

@@ -463,7 +463,7 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         refreshInputSearch();
         if (!checkSelectedRow) {
-            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng khách hàng muốn xóa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng vé muốn xóa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int idLoaiVe = Integer.parseInt(id.getText());
