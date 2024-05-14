@@ -17,14 +17,15 @@ public class HoaDonBLL {
     
     private HoaDonVeBanDTO DAO = new HoaDonVeBanDTO();
 
-    public List<TongHopChuyenBayDTO> findAll(String user) {
-        return HoaDonDAO.getAll(user);
+    public List<TongHopChuyenBayDTO> findAll(String year, String month) {
+        return HoaDonDAO.getAll(year,month);
     }
     
-    public String getSoluongve(){
-        return String.valueOf(HoaDonDAO.getSoluongve()) ;
+    public String getSoluongve(String year, String month){
+        return String.valueOf(HoaDonDAO.getSoluongve(year,month)) ;
     }
-    public String getDoanhthu(){
-        return HoaDonDAO.getDoanhthu() ;
+    public String getDoanhthu(String year, String month){
+        return  String.valueOf(HoaDonDAO.getDoanhthu(year,month)) ;
     }
+    
 }

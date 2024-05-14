@@ -22,51 +22,37 @@ import java.util.List;
  */
 public class HoaDonDAO {
 
-    public static String getDoanhthu() {
-        try {
-            String sql = "SELECT SUM(hdvb.tongTien) AS TongTienBanVe "
-                    + "FROM hoaDonVeBan hdvb "
-                    + "JOIN vemaybay vmb ON hdvb.id = vmb.idHoaDonVeBan;";
-            // Lấy kết nối tới cơ sở dữ liệu
-            Connection connection = BaseDAO.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            String doanhthu = null;
-
-            if (resultSet.next()) {
-                doanhthu = resultSet.getString("TongTienBanVe");
-            }
-
-            resultSet.close();
-            preparedStatement.close();
-            BaseDAO.closeConnection();
-
-            return doanhthu;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public static double getDoanhthu(String year, String month) {
+        HoaDonDAO hoaDonDAO = new HoaDonDAO();
+        List<TongHopChuyenBayDTO> ds =hoaDonDAO.getAll(year,month);
+        double dt = 0;
+        for (TongHopChuyenBayDTO cb : ds) {
+            dt += cb.getDoanhThu();
         }
-        return null;
+        return dt;
     }
 
-    public static int getSoluongve() {
+    public static int getSoluongve(String year, String month) {
         try {
-            String sql = "SELECT SUM(T1.So_Ve_Ban_Ra) AS 'Tong_So_Ve_Ban_Ra'\n"
-                    + "FROM (\n"
-                    + "    SELECT cb.id AS 'ID_MayBay', sbDi.ten AS 'Noi_Bat_Dau', sbDen.ten AS 'Noi_Dap', COUNT(vmb.id) AS 'So_Ve_Ban_Ra'\n"
-                    + "    FROM chuyenbay cb\n"
-                    + "    INNER JOIN sanbay sbDi ON cb.maSanBayDi = sbDi.maSanBay\n"
-                    + "    INNER JOIN sanbay sbDen ON cb.maSanBayDen = sbDen.maSanBay\n"
-                    + "    LEFT JOIN vemaybay vmb ON cb.id = vmb.id\n"
-                    + "    GROUP BY cb.id, sbDi.ten, sbDen.ten\n"
-                    + ") AS T1;";
+            String sql = "SELECT COUNT(vm.id) AS TongSoVeBanRa "
+                    + "FROM vemaybay vm "
+                    + "JOIN hoaDonVeBan hd ON vm.idHoaDonVeBan = hd.id "
+                    + "WHERE (YEAR(hd.ngayLapHoaDon) = ? OR ? IS NULL) "
+                    + "AND (MONTH(hd.ngayLapHoaDon) = ? OR ? IS NULL);";
+
             Connection connection = BaseDAO.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setObject(1, year);
+            preparedStatement.setObject(2, year);
+            preparedStatement.setObject(3, month);
+            preparedStatement.setObject(4, month);
             ResultSet resultSet = preparedStatement.executeQuery();
             int soluongve = 0;
+
             if (resultSet.next()) {
-                soluongve = resultSet.getInt("Tong_So_Ve_Ban_Ra");
+                soluongve = resultSet.getInt("TongSoVeBanRa");
             }
+
             resultSet.close();
             preparedStatement.close();
             BaseDAO.closeConnection();
@@ -79,25 +65,43 @@ public class HoaDonDAO {
         return 0;
     }
 
-    public static List<TongHopChuyenBayDTO> getAll(String username) {
+    public static List<TongHopChuyenBayDTO> getAll(String year, String month) {
         List<TongHopChuyenBayDTO> tongHopChuyenBayList = new ArrayList<>();
         try {
-            String sql = "SELECT cb.id AS 'ID_MayBay',sbDi.ten AS 'Noi_Bat_Dau',sbDen.ten AS 'Noi_Dap', COUNT(vmb.id) AS 'So_Ve_Ban_Ra' FROM chuyenbay cb INNER JOIN sanbay sbDi ON cb.maSanBayDi = sbDi.maSanBay INNER JOIN sanbay sbDen ON cb.maSanBayDen = sbDen.maSanBay LEFT JOIN vemaybay vmb ON cb.id = vmb.id GROUP BY cb.id, sbDi.ten, sbDen.ten";
+            String sql = "SELECT cb.idMayBay, sbDi.ten AS noiDi, sbDen.ten AS noiDen, COUNT(vm.id) AS soLuongVe, SUM(hd.tongTien) AS doanhThu "
+                    + "FROM chuyenbay cb "
+                    + "LEFT JOIN vemaybay vm ON cb.id = vm.id "
+                    + "LEFT JOIN hoaDonVeBan hd ON vm.idHoaDonVeBan = hd.id "
+                    + "LEFT JOIN sanbay sbDi ON cb.maSanBayDi = sbDi.maSanBay "
+                    + "LEFT JOIN sanbay sbDen ON cb.maSanBayDen = sbDen.maSanBay "
+                    + "WHERE vm.tinhTrang = '1' "
+                    + "AND (YEAR(hd.ngayLapHoaDon) = ? OR ? IS NULL) "
+                    + "AND (MONTH(hd.ngayLapHoaDon) = ? OR ? IS NULL) "
+                    + "GROUP BY cb.idMayBay, sbDi.ten, sbDen.ten;";
+
             Connection connection = BaseDAO.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setObject(1, year);
+            preparedStatement.setObject(2, year);
+            preparedStatement.setObject(3, month);
+            preparedStatement.setObject(4, month);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                String idMayBay = resultSet.getString("ID_MayBay");
-                String noiDi = resultSet.getString("Noi_Bat_Dau");
-                String noiDen = resultSet.getString("Noi_Dap");
-                int soLuongVe = resultSet.getInt("So_Ve_Ban_Ra");
+                String idMayBay = resultSet.getString("idMayBay");
+                String noiDi = resultSet.getString("noiDi");
+                String noiDen = resultSet.getString("noiDen");
+                int soLuongVe = resultSet.getInt("soLuongVe");
+                double doanhThu = resultSet.getDouble("doanhThu");
 
-                TongHopChuyenBayDTO tongHopChuyenBay = new TongHopChuyenBayDTO(idMayBay, noiDi, noiDen, soLuongVe);
+                TongHopChuyenBayDTO tongHopChuyenBay = new TongHopChuyenBayDTO(idMayBay, noiDi, noiDen, soLuongVe, doanhThu);
                 tongHopChuyenBayList.add(tongHopChuyenBay);
             }
 
+            resultSet.close();
+            preparedStatement.close();
             BaseDAO.closeConnection();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
