@@ -11,6 +11,7 @@ import DTO.ChuyenBayDTO;
 import DTO.MayBayDTO;
 import DTO.SanBayDTO;
 import Util.DateJcalendarUtil;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -452,6 +453,12 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
     }//GEN-LAST:event_btnShowTime1ActionPerformed
 
     private void btnContinueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueActionPerformed
+        StringBuilder errorMessages = new StringBuilder();
+        chuyenBayBLL.validate(errorMessages, this);
+        if (!errorMessages.isEmpty()) {
+            JOptionPane.showMessageDialog(null, errorMessages, "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         thoiGianDi.setText(dateFormat.format(timePicker1.getSelectedDate()));
         thoiGianDen.setText(dateFormat.format(timePicker2.getSelectedDate()));
@@ -476,7 +483,7 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
                     cbxSanBayDiMap.get(cbxMaSanBayDi.getSelectedItem().toString()), cbxSanBayDenMap.get(cbxMaSanBayDen.getSelectedItem().toString()));
             if (isDone) {
                 ticket_type_panel.loadDataTable();
-                JOptionPane.showMessageDialog(null, "     Thêm mới chuyến bay thành công!\nBây giờ bạn hãy tiếp tục thêm loại vé!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Thêm mới chuyến bay thành công!\nBây giờ bạn hãy tiếp tục thêm loại vé!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 closeDialog(null);
 
                 Ticket_Type_Add_Dialog dialog = new Ticket_Type_Add_Dialog(new java.awt.Frame(), true, ticket_type_panel);
@@ -554,6 +561,41 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         });
     }
 
+    public JComboBox<String> getCbxMaMayBay() {
+        return cbxMaMayBay;
+    }
+
+    public JComboBox<String> getCbxMaSanBayDen() {
+        return cbxMaSanBayDen;
+    }
+
+    public JComboBox<String> getCbxMaSanBayDi() {
+        return cbxMaSanBayDi;
+    }
+
+    public JDateChooser getNgayDen() {
+        return ngayDen;
+    }
+
+    public JDateChooser getNgayDi() {
+        return ngayDi;
+    }
+
+    public JTextField getThoiGianBay() {
+        return thoiGianBay;
+    }
+
+    public JTextField getThoiGianDen() {
+        return thoiGianDen;
+    }
+
+    public JTextField getThoiGianDi() {
+        return thoiGianDi;
+    }
+
+    public JComboBox<String> getTinhTrang() {
+        return tinhTrang;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
