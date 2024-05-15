@@ -7,6 +7,7 @@ import GUI.Customer_Add_Dialog;
 import Util.DateJcalendarUtil;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ChuyenBayBLL {
@@ -30,9 +31,9 @@ public class ChuyenBayBLL {
         String sanBayDenStr = chuyenBay_add_dialog.getCbxMaSanBayDen().getSelectedItem().toString();
         String ngayDiStr = DateJcalendarUtil.formatDate(chuyenBay_add_dialog.getNgayDi().getDate());
         String ngayDenStr = DateJcalendarUtil.formatDate(chuyenBay_add_dialog.getNgayDen().getDate());
-        String thoiGianBayStr = chuyenBay_add_dialog.getThoiGianBay().getText().trim();
         String thoiGianDiStr = chuyenBay_add_dialog.getThoiGianDi().getText().trim();
         String thoiGianDenStr = chuyenBay_add_dialog.getThoiGianDen().getText().trim();
+        String thoiGianBayStr = chuyenBay_add_dialog.getThoiGianBay().getText().trim();
         String tinhTrangStr = chuyenBay_add_dialog.getTinhTrang().getSelectedItem().toString();
         boolean isNull = false;
 
@@ -59,24 +60,24 @@ public class ChuyenBayBLL {
         }
 
         if (!isNull) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate ngayDi = LocalDate.parse(ngayDiStr, formatter);
+            LocalDate ngayDen = LocalDate.parse(ngayDenStr, formatter);
+
+            if (ngayDen.isBefore(ngayDi)) {
+                errorMessage.append("Ngày đến không được nhỏ hơn ngày đi\n");
+            }
+
             if (ngayDiStr.equalsIgnoreCase(ngayDenStr)) {
-                int getHoursThoiGianDi = Integer.parseInt(thoiGianDiStr.substring(0, 2));
-                int getHoursThoiGianDen = Integer.parseInt(thoiGianDenStr.substring(0, 2));
-                if (getHoursThoiGianDen - getHoursThoiGianDi < 2) {
-                    errorMessage.append("Thời gian đến phải lớn hoặc bằng 2 tiếng\n");
+                if (!thoiGianDiStr.isEmpty() && !thoiGianDenStr.isEmpty()) {
+                    int getHoursThoiGianDi = Integer.parseInt(thoiGianDiStr.substring(0, 2));
+                    int getHoursThoiGianDen = Integer.parseInt(thoiGianDenStr.substring(0, 2));
+                    if (getHoursThoiGianDen - getHoursThoiGianDi < 2) {
+                        errorMessage.append("Thời gian đến phải lớn hoặc bằng 2 tiếng\n");
+                    }
                 }
             }
         }
-
-        if (thoiGianBayStr.isEmpty()) {
-            errorMessage.append("Bắt buộc phải chọn thời gian bay\n");
-        }
-//        else {
-//            int getHoursThoiGianBay = Integer.parseInt(thoiGianDiStr.substring(0, 2));
-//            if (getHoursThoiGianBay < 2) {
-//                errorMessage.append("Thời gian bay phải lớn hoặc bằng 2 tiếng\n");
-//            }
-//        }
 
         if (thoiGianDiStr.isEmpty()) {
             errorMessage.append("Bắt buộc phải chọn thời gian đi\n");
@@ -84,6 +85,10 @@ public class ChuyenBayBLL {
 
         if (thoiGianDenStr.isEmpty()) {
             errorMessage.append("Bắt buộc phải chọn thời gian đến\n");
+        }
+
+        if (thoiGianBayStr.isEmpty()) {
+            errorMessage.append("Thời gian bay chưa xác định được\n");
         }
 
         if (tinhTrangStr.equalsIgnoreCase("Tất cả")) {

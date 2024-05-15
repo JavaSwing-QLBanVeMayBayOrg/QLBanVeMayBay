@@ -17,13 +17,15 @@ import javax.swing.*;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author User
  */
 public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
@@ -36,6 +38,7 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
     private Map<String, String> cbxSanBayDenMap = new HashMap<>();
     private Map<String, String> cbxTinhTrangMap = new HashMap<>();
     private Ticket_Type_Panel ticket_type_panel;
+
     public ChuyenBay_Add_Dialog(java.awt.Frame parent, boolean modal, Ticket_Type_Panel ticket_type_panel) throws SQLException {
         super(parent, modal);
         initComponents();
@@ -53,14 +56,19 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         values[0] = "";
         byte i = 1;
         for (MayBayDTO mayBayDTO : mayBayBLL.findAll()) {
-            descriptions[i] = mayBayDTO.getTen();
-            values[i] = String.valueOf(mayBayDTO.getId());
-            i++;
+            if (mayBayDTO.isStatus()) {
+                descriptions[i] = mayBayDTO.getTen();
+                values[i] = String.valueOf(mayBayDTO.getId());
+                i++;
+            }
         }
 
-        DefaultComboBoxModel<String> cbxModel = new DefaultComboBoxModel<>(descriptions);
-        for (int j = 0; j < descriptions.length; j++) {
-            cbxMaMayBayMap.put(descriptions[j], values[j]);
+        String[] descriptionsNewLength = Arrays.copyOf(descriptions, i);
+        String[] valuesNewLength = Arrays.copyOf(values, i);
+
+        DefaultComboBoxModel<String> cbxModel = new DefaultComboBoxModel<>(descriptionsNewLength);
+        for (int j = 0; j < descriptionsNewLength.length; j++) {
+            cbxMaMayBayMap.put(descriptionsNewLength[j], valuesNewLength[j]);
         }
         cbxMaMayBay.setModel(cbxModel);
     }
@@ -73,15 +81,20 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
 
         byte i = 1;
         for (SanBayDTO sanBayDTO : sanBayBLL.getAll()) {
-            descriptions[i] = sanBayDTO.getTen();
-            values[i] = sanBayDTO.getMaSanBay();
-            i++;
+            if (sanBayDTO.isStatus()) {
+                descriptions[i] = sanBayDTO.getTen();
+                values[i] = sanBayDTO.getMaSanBay();
+                i++;
+            }
         }
 
-        DefaultComboBoxModel<String> cbxModel = new DefaultComboBoxModel<>(descriptions);
+        String[] descriptionsNewLength = Arrays.copyOf(descriptions, i);
+        String[] valuesNewLength = Arrays.copyOf(values, i);
 
-        for (int j = 0; j < descriptions.length; j++) {
-            cbxSanBayDiMap.put(descriptions[j], values[j]);
+        DefaultComboBoxModel<String> cbxModel = new DefaultComboBoxModel<>(descriptionsNewLength);
+
+        for (int j = 0; j < descriptionsNewLength.length; j++) {
+            cbxSanBayDiMap.put(descriptionsNewLength[j], valuesNewLength[j]);
         }
         cbxMaSanBayDi.setModel(cbxModel);
     }
@@ -94,15 +107,20 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
 
         byte i = 1;
         for (SanBayDTO sanBayDTO : sanBayBLL.getAll()) {
-            descriptions[i] = sanBayDTO.getTen();
-            values[i] = sanBayDTO.getMaSanBay();
-            i++;
+            if (sanBayDTO.isStatus()) {
+                descriptions[i] = sanBayDTO.getTen();
+                values[i] = sanBayDTO.getMaSanBay();
+                i++;
+            }
         }
 
-        DefaultComboBoxModel<String> cbxModel = new DefaultComboBoxModel<>(descriptions);
+        String[] descriptionsNewLength = Arrays.copyOf(descriptions, i);
+        String[] valuesNewLength = Arrays.copyOf(values, i);
 
-        for (int j = 0; j < descriptions.length; j++) {
-            cbxSanBayDenMap.put(descriptions[j], values[j]);
+        DefaultComboBoxModel<String> cbxModel = new DefaultComboBoxModel<>(descriptionsNewLength);
+
+        for (int j = 0; j < descriptionsNewLength.length; j++) {
+            cbxSanBayDenMap.put(descriptionsNewLength[j], valuesNewLength[j]);
         }
         cbxMaSanBayDen.setModel(cbxModel);
     }
@@ -124,7 +142,8 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
             cbxMaSanBayDen.addItem("Tất cả");
             String selectedValue = String.valueOf(cbxMaSanBayDi.getSelectedItem());
             for (SanBayDTO sanBayDTO : sanBayBLL.getAll()) {
-                if (!sanBayDTO.getTen().equalsIgnoreCase(selectedValue) && cbxMaSanBayDi.getSelectedIndex() != 0) {
+                if (!sanBayDTO.getTen().equalsIgnoreCase(selectedValue)
+                        && cbxMaSanBayDi.getSelectedIndex() != 0 && sanBayDTO.isStatus()) {
                     cbxMaSanBayDen.addItem(sanBayDTO.getTen());
                     cbxSanBayDenMap.put(sanBayDTO.getTen(), sanBayDTO.getMaSanBay());
                 }
@@ -132,6 +151,37 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         } else {
             initCbxSanBayDen();
         }
+    }
+
+    private String initThoiGianBay() {
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        String ngayDiStr = DateJcalendarUtil.formatDate(ngayDi.getDate());
+        String thoiGianDiStr = dateFormat.format(timePicker1.getSelectedDate());
+        String ngayDenStr = DateJcalendarUtil.formatDate(ngayDen.getDate());
+        String thoiGianDenStr = dateFormat.format(timePicker2.getSelectedDate());
+
+        if (ngayDiStr == null || thoiGianDi.getText().isEmpty() || ngayDenStr == null || thoiGianDen.getText().isEmpty()) {
+            return "";
+        }
+        // Định dạng thời gian
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // Biến đổi chuỗi thành LocalDateTime
+        LocalDateTime departureDateTime = LocalDateTime.parse(ngayDiStr + " " + thoiGianDiStr, formatter);
+        LocalDateTime arrivalDateTime = LocalDateTime.parse(ngayDenStr + " " + thoiGianDenStr, formatter);
+
+        // Tính toán thời gian bay
+        Duration flightDuration = Duration.between(departureDateTime, arrivalDateTime);
+
+        // Định dạng kết quả thành giờ:phút:giây
+        long hours = flightDuration.toHours();
+        long minutes = flightDuration.toMinutes() % 60;
+        long seconds = flightDuration.getSeconds() % 60;
+
+
+        thoiGianBay.setText((hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds));
+        return thoiGianBay.getText();
     }
 
     /**
@@ -142,7 +192,6 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        timingTargetAdapter1 = new org.jdesktop.animation.timing.TimingTargetAdapter();
         timePicker2 = new com.raven.swing.TimePicker();
         timePicker3 = new com.raven.swing.TimePicker();
         timePicker1 = new com.raven.swing.TimePicker();
@@ -164,7 +213,6 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         ghiChu = new javax.swing.JTextArea();
         btnShowTime1 = new javax.swing.JButton();
         btnShowTime2 = new javax.swing.JButton();
-        btnShowTime3 = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -174,13 +222,12 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         btnRefresh = new javax.swing.JButton();
         thoiGianDi = new javax.swing.JTextField();
         thoiGianDen = new javax.swing.JTextField();
-        thoiGianBay = new javax.swing.JTextField();
+        thoiGianBay = new javax.swing.JLabel();
 
         timePicker2.setDisplayText(thoiGianDen);
 
-        timePicker3.setDisplayText(thoiGianBay);
-
         timePicker1.setDisplayText(thoiGianDi);
+
         setTitle("Thêm chuyến bay");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -223,6 +270,7 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
 
         cbxMaSanBayDen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+
         ngayDi.setDateFormatString("yyyy-MM-dd");
 
         ngayDen.setDateFormatString("yyyy-MM-dd");
@@ -256,17 +304,6 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         btnShowTime2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnShowTime2ActionPerformed(evt);
-            }
-        });
-
-        btnShowTime3.setBackground(new java.awt.Color(0, 153, 255));
-        btnShowTime3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnShowTime3.setForeground(new java.awt.Color(255, 255, 255));
-        btnShowTime3.setText("Chọn thời gian bay");
-        btnShowTime3.setBorder(null);
-        btnShowTime3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnShowTime3ActionPerformed(evt);
             }
         });
 
@@ -310,7 +347,11 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         btnRefresh.setBorder(null);
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshActionPerformed(evt);
+                try {
+                    btnRefreshActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -326,10 +367,6 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         thoiGianDen.setEditable(false);
         thoiGianDen.setBackground(new java.awt.Color(255, 255, 255));
         thoiGianDen.setBorder(null);
-
-        thoiGianBay.setEditable(false);
-        thoiGianBay.setBackground(new java.awt.Color(255, 255, 255));
-        thoiGianBay.setBorder(null);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -366,13 +403,12 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
                 .addGap(71, 71, 71)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel6)
-                    .addComponent(cbxMaSanBayDen, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbxMaSanBayDen, 0, 193, Short.MAX_VALUE)
                     .addComponent(jLabel10)
-                    .addComponent(btnShowTime3, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
                     .addComponent(jLabel11)
                     .addComponent(tinhTrang, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(thoiGianBay))
+                    .addComponent(thoiGianBay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -398,41 +434,36 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ngayDi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ngayDen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(thoiGianBay))
+                    .addComponent(thoiGianBay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(thoiGianDi, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                            .addComponent(thoiGianDen)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnShowTime3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(4, 4, 4)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(thoiGianDi, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .addComponent(thoiGianDen))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tinhTrang, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(btnShowTime2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnShowTime1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tinhTrang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
@@ -452,24 +483,24 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
     }//GEN-LAST:event_btnShowTime1ActionPerformed
 
     private void btnContinueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueActionPerformed
+        String thoiGianBayStr = initThoiGianBay();
+
         StringBuilder errorMessages = new StringBuilder();
         chuyenBayBLL.validate(errorMessages, this);
         if (!errorMessages.isEmpty()) {
             JOptionPane.showMessageDialog(null, errorMessages, "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         thoiGianDi.setText(dateFormat.format(timePicker1.getSelectedDate()));
         thoiGianDen.setText(dateFormat.format(timePicker2.getSelectedDate()));
-        thoiGianBay.setText(dateFormat.format(timePicker3.getSelectedDate()));
         String thoiGianDiStr = DateJcalendarUtil.formatDate(ngayDi.getDate()) + "T" + thoiGianDi.getText();
-        String thoiGianDenStr  = DateJcalendarUtil.formatDate(ngayDen.getDate()) + "T" + thoiGianDen.getText();
-        String thoiGianBayStr = thoiGianBay.getText();
-
+        String thoiGianDenStr = DateJcalendarUtil.formatDate(ngayDen.getDate()) + "T" + thoiGianDen.getText();
         ChuyenBayDTO chuyenBayDTO = new ChuyenBayDTO();
         chuyenBayDTO.setNgayDi(LocalDateTime.parse(thoiGianDiStr));
         chuyenBayDTO.setNgayDen(LocalDateTime.parse(thoiGianDenStr));
-        chuyenBayDTO.setThoiGianBay(LocalTime.parse(thoiGianBayStr));
+        chuyenBayDTO.setThoiGianBay(thoiGianBayStr);
         chuyenBayDTO.setGhiChu(ghiChu.getText());
         chuyenBayDTO.setTinhTrang(Boolean.parseBoolean(cbxTinhTrangMap.get(tinhTrang.getSelectedItem().toString())));
 
@@ -508,12 +539,11 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         timePicker2.setLocation(700, 800);
     }//GEN-LAST:event_btnShowTime2ActionPerformed
 
-    private void btnShowTime3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowTime3ActionPerformed
-        timePicker3.showPopup(this, 100, 100);
-        timePicker3.setLocation(700, 800);
-    }//GEN-LAST:event_btnShowTime3ActionPerformed
-
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {//GEN-FIRST:event_btnRefreshActionPerformed
+        initCbxSanBayDi();
+        initCbxSanBayDen();
+        initCbxMaMayBay();
+        initCbxTinhTrang();
         cbxMaMayBay.setSelectedIndex(0);
         cbxMaSanBayDi.setSelectedIndex(0);
         cbxMaSanBayDen.setSelectedIndex(0);
@@ -580,9 +610,6 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         return ngayDi;
     }
 
-    public JTextField getThoiGianBay() {
-        return thoiGianBay;
-    }
 
     public JTextField getThoiGianDen() {
         return thoiGianDen;
@@ -596,13 +623,16 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
         return tinhTrang;
     }
 
+    public JLabel getThoiGianBay() {
+        return thoiGianBay;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnContinue;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnShowTime1;
     private javax.swing.JButton btnShowTime2;
-    private javax.swing.JButton btnShowTime3;
     private javax.swing.JComboBox<String> cbxMaMayBay;
     private javax.swing.JComboBox<String> cbxMaSanBayDen;
     private javax.swing.JComboBox<String> cbxMaSanBayDi;
@@ -622,13 +652,12 @@ public class ChuyenBay_Add_Dialog extends java.awt.Dialog {
     private javax.swing.JScrollPane jScrollPane1;
     private com.toedter.calendar.JDateChooser ngayDen;
     private com.toedter.calendar.JDateChooser ngayDi;
-    private javax.swing.JTextField thoiGianBay;
+    private javax.swing.JLabel thoiGianBay;
     private javax.swing.JTextField thoiGianDen;
     private javax.swing.JTextField thoiGianDi;
     private com.raven.swing.TimePicker timePicker1;
     private com.raven.swing.TimePicker timePicker2;
     private com.raven.swing.TimePicker timePicker3;
-    private org.jdesktop.animation.timing.TimingTargetAdapter timingTargetAdapter1;
     private javax.swing.JComboBox<String> tinhTrang;
     // End of variables declaration//GEN-END:variables
 }

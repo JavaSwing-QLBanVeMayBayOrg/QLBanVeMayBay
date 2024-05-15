@@ -14,6 +14,8 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -121,6 +123,10 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
         tableLoaiVe.setModel(tblModel);
     }
 
+    public void setCheckSelectedRow(boolean checkSelectedRow) {
+        this.checkSelectedRow = checkSelectedRow;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -159,16 +165,26 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
         btnSearch = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         id = new javax.swing.JTextField();
+        btnEdit = new javax.swing.JButton();
+        btnView = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 153, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText(" Tìm kiếm loại vé");
 
+        id.setVisible(false);
+        idLoaiVe.setEditable(false);
+        idLoaiVe.setBackground(new java.awt.Color(255, 255, 255));
         idLoaiVe.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         idLoaiVe.setBorder(null);
-        id.setVisible(false);
-        id.setEditable(false);
+        idLoaiVe.setEnabled(false);
+        idLoaiVe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idLoaiVeActionPerformed(evt);
+            }
+        });
+
         tableLoaiVe.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -278,6 +294,7 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
         btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnRefresh.setForeground(new java.awt.Color(255, 255, 255));
         btnRefresh.setText("Đặt lại");
+        btnRefresh.setBorder(null);
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRefreshActionPerformed(evt);
@@ -295,7 +312,7 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
             }
         });
 
-        btnDelete.setBackground(new java.awt.Color(0, 135, 255));
+        btnDelete.setBackground(new java.awt.Color(0, 153, 255));
         btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Xóa");
@@ -303,6 +320,28 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
+            }
+        });
+
+        btnEdit.setBackground(new java.awt.Color(0, 153, 255));
+        btnEdit.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEdit.setForeground(new java.awt.Color(255, 255, 255));
+        btnEdit.setText("Chỉnh sửa");
+        btnEdit.setBorder(null);
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
+
+        btnView.setBackground(new java.awt.Color(0, 153, 255));
+        btnView.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnView.setForeground(new java.awt.Color(255, 255, 255));
+        btnView.setText("Xem chi tiết");
+        btnView.setBorder(null);
+        btnView.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewActionPerformed(evt);
             }
         });
 
@@ -360,8 +399,12 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
                                 .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
                         .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(33, 33, 33)
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
                         .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -413,14 +456,16 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(32, 32, 32)
+                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -439,9 +484,11 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         LoaiVeMayBaySearchDTO loaiVeMayBaySearchDTO = initLoaiVeMayBaySearchDTO();
         if (loaiVeMayBayBLL.search(loaiVeMayBaySearchDTO).isEmpty()) {
+            checkSelectedRow = false;
             tblModel.setRowCount(0);
             JOptionPane.showMessageDialog(this, "Không tìm thấy kết quả phù hợp.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         } else {
+            checkSelectedRow = false;
             fillTable();
         }
     }//GEN-LAST:event_btnSearchActionPerformed
@@ -449,6 +496,7 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         refreshInputSearch();
         fillTable();
+        checkSelectedRow = false;
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void tableLoaiVeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableLoaiVeMouseClicked
@@ -463,7 +511,7 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         refreshInputSearch();
         if (!checkSelectedRow) {
-            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng vé muốn xóa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng vé máy bay muốn xóa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int idLoaiVe = Integer.parseInt(id.getText());
@@ -476,7 +524,7 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
             return;
         }
 
-        int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa vé này ", "Xác nhận xóa vé", JOptionPane.YES_NO_OPTION);
+        int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa vé\n         Có mã loại vé là: " + id.getText(), "Xác nhận xóa vé", JOptionPane.YES_NO_OPTION);
 
         if (choice == JOptionPane.YES_NO_OPTION) {
             if (loaiVeMayBayBLL.delete(loaiVeMayBayDTO)) {
@@ -490,12 +538,62 @@ public class Ticket_Type_Panel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        refreshInputSearch();
+        if (!checkSelectedRow) {
+            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng vé máy bay muốn chỉnh sửa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        int idMayBay = Integer.parseInt(id.getText());
+        LoaiVeMayBayDTO loaiVeMayBayDTO = loaiVeMayBayBLL.findById(idMayBay);
+        if (loaiVeMayBayDTO == null) {
+            JOptionPane.showMessageDialog(null, "Không tìm thấy vé máy bay này trong hệ thống", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            fillTable();
+            checkSelectedRow = false;
+            return;
+        }
+        new TicketType_Update(this);
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
+        refreshInputSearch();
+        if (!checkSelectedRow) {
+            JOptionPane.showMessageDialog(null, "Vui lòng click vào dòng loại vé muốn xem chi tiết", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        int idLoaiVe = Integer.parseInt(id.getText());
+        LoaiVeMayBayDTO loaiVeMayBayDTO = loaiVeMayBayBLL.findById(idLoaiVe);
+        if (loaiVeMayBayDTO == null) {
+            JOptionPane.showMessageDialog(null, "Không tìm thấy loại vé máy bay này trong hệ thống", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            fillTable();
+            return;
+        }
+
+        Ticket_Type_Detail_Dialog dialog = new Ticket_Type_Detail_Dialog(new java.awt.Frame(), true, this);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                dialog.closeDialog(e);
+            }
+        });
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btnViewActionPerformed
+
+    private void idLoaiVeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idLoaiVeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_idLoaiVeActionPerformed
+
+    public JTextField getId() {
+        return id;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreate;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnView;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox<String> cbxGiaVe;

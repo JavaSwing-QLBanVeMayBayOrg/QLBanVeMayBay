@@ -56,7 +56,7 @@ public class LoaiVeDAO {
         chuyenbay.setMaSanBayDen(sanbayve);
         chuyenbay.setNgayDi(rs.getTimestamp("ngayDi").toLocalDateTime());
         chuyenbay.setNgayDen(rs.getTimestamp("ngayDen").toLocalDateTime());
-        chuyenbay.setThoiGianBay(rs.getTime("thoiGianBay").toLocalTime());
+        chuyenbay.setThoiGianBay(rs.getString("thoiGianBay"));
         chuyenbay.setGhiChu(rs.getString("ghiChu"));
         loaive.setIdChuyenBay(chuyenbay);
         arr.add(loaive);
@@ -101,7 +101,7 @@ public class LoaiVeDAO {
         chuyenbay.setMaSanBayDen(sanbayve);
         chuyenbay.setNgayDi(rs.getTimestamp("ngayDi").toLocalDateTime());
         chuyenbay.setNgayDen(rs.getTimestamp("ngayDen").toLocalDateTime());
-        chuyenbay.setThoiGianBay(rs.getTime("thoiGianBay").toLocalTime());
+        chuyenbay.setThoiGianBay(rs.getString("thoiGianBay"));
         chuyenbay.setGhiChu(rs.getString("ghiChu"));
         loaive.setIdChuyenBay(chuyenbay);
         arr.add(loaive);

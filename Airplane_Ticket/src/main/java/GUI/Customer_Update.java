@@ -402,6 +402,7 @@ public class Customer_Update extends javax.swing.JFrame {
             for (HangThanThietDTO hangThanThietDTO : hangThanThietBLL.findAll()) {
                 if (String.valueOf(hangThanThiet.getSelectedItem()).equalsIgnoreCase(hangThanThietDTO.getTenHang())) {
                     khachHangDTO.setIdHangThanThiet(hangThanThietDTO);
+                    break;
                 }
             }
 

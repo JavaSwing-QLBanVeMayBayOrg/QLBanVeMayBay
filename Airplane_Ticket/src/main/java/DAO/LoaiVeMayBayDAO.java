@@ -152,7 +152,7 @@ public class LoaiVeMayBayDAO {
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 chuyenBayDTO.setNgayDi(LocalDateTime.parse(resultSet.getString("ngayDi"), dateFormatter));
                 chuyenBayDTO.setNgayDen(LocalDateTime.parse(resultSet.getString("ngayDen"), dateFormatter));
-                chuyenBayDTO.setThoiGianBay(LocalTime.parse(resultSet.getString("thoiGianBay"), DateTimeFormatter.ofPattern("HH:mm:ss")));
+                chuyenBayDTO.setThoiGianBay(resultSet.getString("thoiGianBay"));
                 chuyenBayDTO.setGhiChu(resultSet.getString("ghiChu"));
                 chuyenBayDTO.setTinhTrang(resultSet.getBoolean("tinhTrang"));
                 loaiVeMayBayDTO = new LoaiVeMayBayDTO();
@@ -170,27 +170,6 @@ public class LoaiVeMayBayDAO {
             e.printStackTrace();
         }
         return loaiVeMayBayDTOList;
-    }
-
-    public boolean create(LoaiVeMayBayDTO loaiVeMayBayDTO, int idChuyenBay) {
-        try {
-            PreparedStatement preparedStatement = BaseDAO.getConnection()
-                    .prepareStatement("INSERT INTO loaivemaybay(idChuyenBay, hangVe, giaVe, soLuongVeTong, soLuongVeCon, tinhTrang) " +
-                            "VALUES (?, ?, ?, ?, ?, ?) ");
-
-            preparedStatement.setInt(1, idChuyenBay);
-            preparedStatement.setString(2, loaiVeMayBayDTO.getHangVe());
-            preparedStatement.setBigDecimal(3, loaiVeMayBayDTO.getGiaVe());
-            preparedStatement.setInt(4, loaiVeMayBayDTO.getSoLuongVeTong());
-            preparedStatement.setInt(5, loaiVeMayBayDTO.getSoLuongVeCon());
-            preparedStatement.setBoolean(6, loaiVeMayBayDTO.isTinhTrang());
-            boolean success = preparedStatement.executeUpdate() > 0;
-            BaseDAO.closeConnection();
-            return success;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public LoaiVeMayBayDTO findById(int id) {
@@ -234,7 +213,7 @@ public class LoaiVeMayBayDAO {
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 chuyenBayDTO.setNgayDi(LocalDateTime.parse(resultSet.getString("ngayDi"), dateFormatter));
                 chuyenBayDTO.setNgayDen(LocalDateTime.parse(resultSet.getString("ngayDen"), dateFormatter));
-                chuyenBayDTO.setThoiGianBay(LocalTime.parse(resultSet.getString("thoiGianBay"), DateTimeFormatter.ofPattern("HH:mm:ss")));
+                chuyenBayDTO.setThoiGianBay(resultSet.getString("thoiGianBay"));
                 chuyenBayDTO.setGhiChu(resultSet.getString("ghiChu"));
                 chuyenBayDTO.setTinhTrang(resultSet.getBoolean("tinhTrang"));
                 loaiVeMayBayDTO = new LoaiVeMayBayDTO();
@@ -252,6 +231,50 @@ public class LoaiVeMayBayDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean create(LoaiVeMayBayDTO loaiVeMayBayDTO, int idChuyenBay) {
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("INSERT INTO loaivemaybay(idChuyenBay, hangVe, giaVe, soLuongVeTong, soLuongVeCon, tinhTrang) " +
+                            "VALUES (?, ?, ?, ?, ?, ?) ");
+
+            preparedStatement.setInt(1, idChuyenBay);
+            preparedStatement.setString(2, loaiVeMayBayDTO.getHangVe());
+            preparedStatement.setBigDecimal(3, loaiVeMayBayDTO.getGiaVe());
+            preparedStatement.setInt(4, loaiVeMayBayDTO.getSoLuongVeTong());
+            preparedStatement.setInt(5, loaiVeMayBayDTO.getSoLuongVeCon());
+            preparedStatement.setBoolean(6, loaiVeMayBayDTO.isTinhTrang());
+            boolean success = preparedStatement.executeUpdate() > 0;
+            BaseDAO.closeConnection();
+            return success;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean update(LoaiVeMayBayDTO loaiVeMayBayDTO) {
+        try {
+            PreparedStatement preparedStatement = BaseDAO.getConnection()
+                    .prepareStatement("UPDATE loaivemaybay " +
+                            "SET hangVe = ?, giaVe = ?, soLuongVeTong = ?, soLuongVeCon = ?, tinhTrang = ? " +
+                            "WHERE id = ? ");
+
+            preparedStatement.setString(1, loaiVeMayBayDTO.getHangVe());
+            preparedStatement.setBigDecimal(2, loaiVeMayBayDTO.getGiaVe());
+            preparedStatement.setInt(3, loaiVeMayBayDTO.getSoLuongVeTong());
+            preparedStatement.setInt(4, loaiVeMayBayDTO.getSoLuongVeCon());
+            preparedStatement.setBoolean(5, loaiVeMayBayDTO.isTinhTrang());
+            preparedStatement.setInt(6, loaiVeMayBayDTO.getId());
+
+            boolean success = preparedStatement.executeUpdate() > 0;
+            BaseDAO.closeConnection();
+            return success;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean delete(LoaiVeMayBayDTO loaiVeMayBayDTO) {

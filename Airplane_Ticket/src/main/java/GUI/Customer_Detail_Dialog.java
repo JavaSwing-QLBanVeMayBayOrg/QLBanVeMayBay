@@ -79,6 +79,7 @@ public class Customer_Detail_Dialog extends java.awt.Dialog {
         jLabel2 = new javax.swing.JLabel();
 
         setResizable(false);
+        address.setLineWrap(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
@@ -136,6 +137,7 @@ public class Customer_Detail_Dialog extends java.awt.Dialog {
         address.setEditable(false);
         address.setColumns(20);
         address.setRows(5);
+        address.setBorder(null);
         jScrollPane1.setViewportView(address);
 
         btnCancel.setBackground(new java.awt.Color(0, 153, 255));
