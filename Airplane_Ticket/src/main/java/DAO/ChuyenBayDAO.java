@@ -49,7 +49,7 @@ public class ChuyenBayDAO {
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 chuyenBayDTO.setNgayDi(LocalDateTime.parse(resultSet.getString("ngayDi"), dateFormatter));
                 chuyenBayDTO.setNgayDen(LocalDateTime.parse(resultSet.getString("ngayDen"), dateFormatter));
-                chuyenBayDTO.setThoiGianBay(LocalTime.parse(resultSet.getString("thoiGianBay"), DateTimeFormatter.ofPattern("HH:mm:ss")));
+                chuyenBayDTO.setThoiGianBay(resultSet.getString("thoiGianBay"));
                 chuyenBayDTO.setGhiChu(resultSet.getString("ghiChu"));
                 chuyenBayDTO.setTinhTrang(resultSet.getBoolean("tinhTrang"));
                 chuyenBayDTOList.add(chuyenBayDTO);
@@ -118,7 +118,7 @@ public class ChuyenBayDAO {
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 chuyenBayDTO.setNgayDi(LocalDateTime.parse(resultSet.getString("ngayDi"), dateFormatter));
                 chuyenBayDTO.setNgayDen(LocalDateTime.parse(resultSet.getString("ngayDen"), dateFormatter));
-                chuyenBayDTO.setThoiGianBay(LocalTime.parse(resultSet.getString("thoiGianBay"), DateTimeFormatter.ofPattern("HH:mm:ss")));
+                chuyenBayDTO.setThoiGianBay(resultSet.getString("thoiGianBay"));
                 chuyenBayDTO.setGhiChu(resultSet.getString("ghiChu"));
                 chuyenBayDTO.setTinhTrang(resultSet.getBoolean("tinhTrang"));
                 return chuyenBayDTO;

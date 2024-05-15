@@ -4,6 +4,7 @@ import DAO.LoaiVeMayBayDAO;
 import DTO.LoaiVeMayBayDTO;
 import DTO.LoaiVeMayBaySearchDTO;
 import GUI.Customer_Add_Dialog;
+import GUI.TicketType_Update;
 import GUI.Ticket_Type_Add_Dialog;
 import Util.DateJcalendarUtil;
 
@@ -29,12 +30,17 @@ public class LoaiVeMayBayBLL {
 
         return loaiVeMayBayDAO.search(loaiVeMayBaySearchDTO);
     }
+
     public LoaiVeMayBayDTO findById(int id) {
         return loaiVeMayBayDAO.findById(id);
     }
 
     public boolean create(LoaiVeMayBayDTO loaiVeMayBayDTO, int idChuyenBay) {
         return loaiVeMayBayDAO.create(loaiVeMayBayDTO, idChuyenBay);
+    }
+
+    public boolean update(LoaiVeMayBayDTO loaiVeMayBayDTO) {
+        return loaiVeMayBayDAO.update(loaiVeMayBayDTO);
     }
 
     public boolean delete(LoaiVeMayBayDTO loaiVeMayBayDTO) {
@@ -61,13 +67,62 @@ public class LoaiVeMayBayBLL {
         } else if (giaVeStr.length() > 20) {
             errorMessage.append("Giá vé đã quá giới hạn cho phép\n");
         } else {
-            int giaVe = Integer.parseInt(giaVeStr);
+            BigDecimal giaVe = new BigDecimal(giaVeStr);
+            BigDecimal giaVeThuongGia = new BigDecimal(2000000);
+            BigDecimal giaVePhoThongMin = new BigDecimal(800000);
+            BigDecimal giaVePhoThongMax = new BigDecimal(1999999);
+
             if (hangVeStr.equalsIgnoreCase("Thương gia")) {
-                if (giaVe < 2000000) {
+                if (giaVe.compareTo(giaVeThuongGia) < 0) {
                     errorMessage.append("Giá vé Thương Gia phải từ 2 triệu chở lên\n");
                 }
             } else if (hangVeStr.equalsIgnoreCase("Phổ thông")) {
-                if (giaVe < 800000 || giaVe >= 2000000) {
+                if (giaVe.compareTo(giaVePhoThongMin) < 0 || giaVe.compareTo(giaVePhoThongMax) > 0) {
+                    errorMessage.append("Giá vé Phổ Thông phải từ 800k đến dưới 2 triệu\n");
+                }
+            }
+        }
+    }
+
+    //=============================
+    public void validate(StringBuilder errorMessage, TicketType_Update ticketType_update) {
+        String hangVeStr = ticketType_update.getCbxHangVe().getSelectedItem().toString();
+        String giaVeStr = ticketType_update.getGiaVe().getText().trim();
+        String soLuongVeTongStr = ticketType_update.getSoLuongVeTong().getText();
+        String soLuongVeConStr = ticketType_update.getSoLuongVeCon().getText();
+
+        if (soLuongVeTongStr.isEmpty()) {
+            errorMessage.append("Số lượng vé tổng không được để trống\n");
+        } else if (!soLuongVeTongStr.matches("^[0-9]+$")) {
+            errorMessage.append("Số lượng vé tổng không hợp lệ\n");
+        }
+
+        if (soLuongVeConStr.isEmpty()) {
+            errorMessage.append("Số lượng vé còn không được để trống\n");
+        } else if (!soLuongVeConStr.matches("^[0-9]+$")) {
+            errorMessage.append("Số lượng vé còn không hợp lệ\n");
+        } else if (Integer.parseInt(soLuongVeConStr) > Integer.parseInt(soLuongVeTongStr)) {
+            errorMessage.append("Số lượng vé còn không được lớn hơn số lượng vé tổng\n");
+        }
+
+        if (giaVeStr.isEmpty()) {
+            errorMessage.append("Giá vé không được để trống\n");
+        } else if (!giaVeStr.matches("^[0-9]+$")) {
+            errorMessage.append("Giá vé không hợp lệ\n");
+        } else if (giaVeStr.length() > 20) {
+            errorMessage.append("Giá vé đã quá giới hạn cho phép\n");
+        } else {
+            BigDecimal giaVe = new BigDecimal(giaVeStr);
+            BigDecimal giaVeThuongGia = new BigDecimal(2000000);
+            BigDecimal giaVePhoThongMin = new BigDecimal(800000);
+            BigDecimal giaVePhoThongMax = new BigDecimal(1999999);
+
+            if (hangVeStr.equalsIgnoreCase("Thương gia")) {
+                if (giaVe.compareTo(giaVeThuongGia) < 0) {
+                    errorMessage.append("Giá vé Thương Gia phải từ 2 triệu chở lên\n");
+                }
+            } else if (hangVeStr.equalsIgnoreCase("Phổ thông")) {
+                if (giaVe.compareTo(giaVePhoThongMin) < 0 || giaVe.compareTo(giaVePhoThongMax) > 0) {
                     errorMessage.append("Giá vé Phổ Thông phải từ 800k đến dưới 2 triệu\n");
                 }
             }
