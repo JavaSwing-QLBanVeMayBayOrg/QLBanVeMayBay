@@ -4,6 +4,8 @@
  */
 package DAO;
 
+import DTO.HangThanThietDTO;
+import DTO.KhachHangDTO;
 import DTO.NhanVienDTO;
 import DTO.TaiKhoanDTO;
 import java.sql.Connection;
@@ -13,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,7 @@ import java.util.List;
  */
 public class TaiKhoanDAO {
 
-    public TaiKhoanDTO CheckTaiKhoan(String usr, String password) throws SQLException {
+    public TaiKhoanDTO CheckTaiKhoan(String usr) throws SQLException {
         TaiKhoanDTO taikhoan = new TaiKhoanDTO();
         Connection con = BaseDAO.getConnection();
         if (con != null) {
@@ -36,18 +39,15 @@ public class TaiKhoanDAO {
                 } else {
                     NhanVienDTO nhanvien = new NhanVienDTO();
                     taikhoan.setUsername(rs.getString("userName"));
-                    String passwordDB = rs.getString("password");
-                    if (password.equals(passwordDB)) {
-                        taikhoan.setPassword(password);
-                        taikhoan.setTinhTrang(rs.getBoolean(4));
-                        nhanvien.setCmnd(rs.getString("cmnd"));
-                        nhanvien.setSoDienThoai(rs.getString("soDienThoai"));
-                        nhanvien.setHo(rs.getString("ho"));
-                        nhanvien.setTen(rs.getString("ten"));
-                        nhanvien.setGioiTinh(rs.getBoolean("gioiTinh"));
-                        nhanvien.setTinhTrang(rs.getBoolean(12));
-                        taikhoan.setCmndNhanVien(nhanvien);
-                    }
+                    taikhoan.setPassword(rs.getString("passWord"));
+                    taikhoan.setTinhTrang(rs.getBoolean(4));
+                    nhanvien.setCmnd(rs.getString("cmnd"));
+                    nhanvien.setSoDienThoai(rs.getString("soDienThoai"));
+                    nhanvien.setHo(rs.getString("ho"));
+                    nhanvien.setTen(rs.getString("ten"));
+                    nhanvien.setGioiTinh(rs.getBoolean("gioiTinh"));
+                    nhanvien.setTinhTrang(rs.getBoolean(12));
+                    taikhoan.setCmndNhanVien(nhanvien);
                 }
                 return taikhoan;
             } catch (SQLException ex) {

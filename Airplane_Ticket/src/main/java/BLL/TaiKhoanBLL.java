@@ -15,9 +15,9 @@ import java.sql.SQLException;
 public class TaiKhoanBLL {
     private TaiKhoanDAO taikhoanDAO = new TaiKhoanDAO();
     
-    public TaiKhoanDTO CheckTaiKhoan(String usr,String password) throws SQLException
+    public TaiKhoanDTO CheckTaiKhoan(String usr) throws SQLException
     {
-        return taikhoanDAO.CheckTaiKhoan(usr,password);
+        return taikhoanDAO.CheckTaiKhoan(usr);
        
     }
     

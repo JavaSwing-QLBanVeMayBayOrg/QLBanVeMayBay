@@ -6,6 +6,8 @@ package GUI;
 
 import BLL.TaiKhoanBLL;
 import DTO.TaiKhoanDTO;
+import Util.BCryptUtil;
+
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -142,7 +144,7 @@ public class Login extends javax.swing.JFrame {
         TaiKhoanDTO taikhoan =new TaiKhoanDTO();
        
         try {
-            taikhoan = taikhoanBLL.CheckTaiKhoan(usr, pass);
+            taikhoan = taikhoanBLL.CheckTaiKhoan(usr);
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -151,7 +153,15 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane,"Tài khoản không tồn tại !");
         else
         {
-            if (taikhoan.getPassword()==null)
+            if (pass.equals(taikhoan.getPassword())) {
+                JOptionPane.showMessageDialog(rootPane,"Đăng nhập thành công !");
+                HomePage hp=new HomePage(taikhoan);
+                hp.setSize(1200,800);
+                hp.setLocationRelativeTo(null);
+                hp.setVisible(true);
+                this.dispose();
+            }
+            else if (taikhoan.getPassword()==null || !BCryptUtil.checkPassword(pass, taikhoan.getPassword()))
                 JOptionPane.showMessageDialog(rootPane,"Mật khẩu không chính xác !");
             else if (taikhoan.isTinhTrang()==false)
             {
