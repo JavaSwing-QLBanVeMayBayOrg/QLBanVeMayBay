@@ -28,19 +28,19 @@ public class Staff extends javax.swing.JPanel {
         initComponents();
         inittbl();
         fillTable();
-//        jTable1.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                int row = jTable1.getSelectedRow(); // Lấy chỉ số của dòng được chọn
-//                if (row != -1) { // Kiểm tra xem dòng có được chọn hay không
-//                    NhanVienDTO nhanvien = NhanVienBLL.findByCMND(jTable1.getValueAt(row, 0).toString());
-//                    Staff_Detail_Dialog detail = new Staff_Detail_Dialog(new javax.swing.JFrame(), true, nhanvien);
-//                    detail.setLocationRelativeTo(null);
-//                    detail.setVisible(true);
-//                }
-//            }
-//        }
-//        );
+        jTable1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = jTable1.getSelectedRow(); // Lấy chỉ số của dòng được chọn
+                if (row != -1) { // Kiểm tra xem dòng có được chọn hay không
+                    NhanVienDTO nhanvien = NhanVienBLL.findByCMND(jTable1.getValueAt(row, 0).toString());
+                    Staff_Detail_Dialog detail = new Staff_Detail_Dialog(new javax.swing.JFrame(), true, nhanvien);
+                    detail.setLocationRelativeTo(null);
+                    detail.setVisible(true);
+                }
+            }
+        }
+        );
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -199,9 +199,9 @@ public class Staff extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-//        Staff_Add_Dialog add = new Staff_Add_Dialog(new javax.swing.JFrame(), true);
-//        add.setLocationRelativeTo(null);
-//        add.setVisible(true);
+        Staff_Add_Dialog add = new Staff_Add_Dialog(new javax.swing.JFrame(), true);
+        add.setLocationRelativeTo(null);
+        add.setVisible(true);
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
