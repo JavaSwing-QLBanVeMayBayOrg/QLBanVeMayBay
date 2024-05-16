@@ -33,36 +33,13 @@ public class HoaDonDAO {
     }
 
     public static int getSoluongve(String year, String month) {
-        try {
-            String sql = "SELECT COUNT(vm.id) AS TongSoVeBanRa "
-                    + "FROM vemaybay vm "
-                    + "JOIN hoaDonVeBan hd ON vm.idHoaDonVeBan = hd.id "
-                    + "WHERE (YEAR(hd.ngayLapHoaDon) = ? OR ? IS NULL) "
-                    + "AND (MONTH(hd.ngayLapHoaDon) = ? OR ? IS NULL);";
-
-            Connection connection = BaseDAO.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setObject(1, year);
-            preparedStatement.setObject(2, year);
-            preparedStatement.setObject(3, month);
-            preparedStatement.setObject(4, month);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            int soluongve = 0;
-
-            if (resultSet.next()) {
-                soluongve = resultSet.getInt("TongSoVeBanRa");
-            }
-
-            resultSet.close();
-            preparedStatement.close();
-            BaseDAO.closeConnection();
-
-            return soluongve;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+                HoaDonDAO hoaDonDAO = new HoaDonDAO();
+        List<TongHopChuyenBayDTO> ds =hoaDonDAO.getAll(year,month);
+        int dt = 0;
+        for (TongHopChuyenBayDTO cb : ds) {
+            dt += cb.getSoluongve();
         }
-        return 0;
+        return dt;
     }
 
     public static List<TongHopChuyenBayDTO> getAll(String year, String month) {
