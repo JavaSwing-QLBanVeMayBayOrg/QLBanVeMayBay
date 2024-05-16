@@ -41,12 +41,13 @@ public class Staff extends javax.swing.JPanel {
             }
         }
         );
+        jButton1.setText("Xuất file");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-
+        jButton2.setText("Nhập file");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
